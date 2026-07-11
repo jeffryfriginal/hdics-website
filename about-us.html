@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us — Holy Deliverance Integrated Christian School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .about-grid.full { grid-template-columns: 1fr; }
+        @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
+
+        .about-card {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 2.5rem;
+            border: 1px solid var(--cream-dark);
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+        .about-card:hover { box-shadow: 0 12px 40px rgba(15,32,64,0.09); }
+        .about-card-gold-line {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+        }
+        .about-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+        .about-card h3 small {
+            display: block;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.4rem;
+        }
+        .about-card p {
+            color: var(--gray-text);
+            line-height: 1.8;
+            font-size: 0.97rem;
+            font-weight: 300;
+        }
+        .about-card ul {
+            list-style: none;
+            margin-top: 0.75rem;
+        }
+        .about-card ul li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 0.55rem 0;
+            border-bottom: 1px solid var(--cream-dark);
+            font-size: 0.92rem;
+            color: var(--gray-text);
+            line-height: 1.65;
+            font-weight: 300;
+        }
+        .about-card ul li:last-child { border-bottom: none; }
+        .about-card ul li::before {
+            content: '✦';
+            color: var(--gold);
+            font-size: 0.65em;
+            margin-top: 0.45rem;
+            flex-shrink: 0;
+        }
+
+        .about-card.photo-card {
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            min-height: 340px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .about-card.photo-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15,32,64,0.15) 0%, rgba(15,32,64,0.65) 65%, rgba(15,32,64,0.88) 100%);
+            z-index: 0;
+        }
+        .about-card.photo-card > * { position: relative; z-index: 1; }
+        .about-card.photo-card h3 { color: var(--white); }
+        .about-card.photo-card h3 small { color: var(--gold-light); }
+        .about-card.photo-card p { color: rgba(255,255,255,0.85); }
+        .about-card.photo-card ul li { color: rgba(255,255,255,0.85); border-bottom-color: rgba(255,255,255,0.15); }
+
+        .core-values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-top: 2.5rem;
+        }
+        .cv-card {
+            background: var(--navy);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s;
+        }
+        .cv-card:hover { transform: translateY(-3px); }
+        .cv-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 80px; height: 80px;
+            background: rgba(201,146,42,0.08);
+            border-radius: 50%;
+            transform: translate(25%, 25%);
+        }
+        .cv-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+        .cv-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 0.4rem;
+        }
+        .cv-desc {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .about-bg { background: var(--cream); }
+        .about-white { background: var(--white); }
+    </style>
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <img src="HDICS-LOGO.png" alt="HDICS Logo">
+                <div class="nav-brand-text">
+                    <strong>Holy Deliverance</strong>
+                    <span>Integrated Christian School · Angono, Rizal</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li class="has-dropdown active">
+                    <a href="about-us.html">About Us</a>
+                    <div class="dropdown-menu">
+                        <a href="about-us.html#vision">Vision Statement</a>
+                        <a href="about-us.html#mission">Mission</a>
+                        <a href="about-us.html#core-values">Core Values</a>
+                        <a href="hdics-board.html">HDICS Board</a>
+                    </div>
+                </li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="#">Admissions</a></li>
+                <li><a href="#">Programs</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="enroll-now.html" class="nav-cta">Enroll Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-banner">
+        <div class="page-banner-inner">
+            <p class="page-banner-crumb"><a href="index.html">Home</a> / About Us</p>
+            <h1>About HDICS</h1>
+            <p>Who we are, what we believe, and why we exist.</p>
+        </div>
+    </div>
+
+    <!-- VISION & MISSION -->
+    <section class="section about-bg">
+        <div class="section-inner">
+            <p class="section-label">Our Foundation</p>
+            <h2 class="section-title" style="margin-bottom:2.5rem;">Vision &amp; Mission</h2>
+            <div class="about-grid">
+                <div class="about-card photo-card" id="vision" style="background-image: url('about-microscope.jpg');">
+                    <div class="about-card-gold-line"></div>
+                    <h3><small>Vision Statement</small>The Leading Christian School</h3>
+                    <p>To be the leading Christian School of its kind in the country, bridging faith in Almighty God with the heart and passion for academic excellence and Christian values.</p>
+                </div>
+                <div class="about-card photo-card" id="mission" style="background-image: url('about-dedication.jpg');">
+                    <div class="about-card-gold-line"></div>
+                    <h3><small>Mission</small>Future Leaders of the Nation</h3>
+                    <p>To develop Christian students to become future leaders of our nation with love and fear of the Lord.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MISSION STATEMENT -->
+    <section class="section about-white">
+        <div class="section-inner">
+            <p class="section-label">What We Do</p>
+            <h2 class="section-title" style="margin-bottom:2.5rem;">Our Mission Statement</h2>
+            <div class="about-grid">
+                <div class="about-card photo-card" style="background-image: url('about-welcome.jpg');">
+                    <div class="about-card-gold-line"></div>
+                    <h3>Four Commitments to Every Child</h3>
+                    <ul>
+                        <li>To lead every child to Jesus Christ <span style="opacity:0.6;font-size:0.82em;">(John 3:3)</span></li>
+                        <li>To teach every child the Word of God <span style="opacity:0.6;font-size:0.82em;">(2 Timothy 2:15)</span></li>
+                        <li>To teach every child to truly fear God <span style="opacity:0.6;font-size:0.82em;">(Romans 5:13)</span></li>
+                        <li>To teach every child the way of holy living to worship and glorify God <span style="opacity:0.6;font-size:0.82em;">(Colossians 2:11; 2 Cor. 6:17)</span></li>
+                    </ul>
+                </div>
+                <div class="about-card photo-card" style="background-image: url('about-philosophy.jpg');">
+                    <div class="about-card-gold-line"></div>
+                    <h3>Our Philosophy</h3>
+                    <p>We provide a sound academic education integrated with a Christian view of God and the world. If the Bible is true, then what is truly true must be grounded in the Word of God. Faith and reason are not in conflict — they are inseparable in the HDICS classroom.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CORE VALUES -->
+    <section class="section about-bg" id="core-values">
+        <div class="section-inner">
+            <p class="section-label">Core Values</p>
+            <h2 class="section-title">The HDICS Identity</h2>
+            <div class="core-values-grid">
+                <div class="cv-card">
+                    <div class="cv-letter">H</div>
+                    <p class="cv-title">Honor</p>
+                    <p class="cv-desc">Honor and Glorify God in everything we do.</p>
+                </div>
+                <div class="cv-card">
+                    <div class="cv-letter">D</div>
+                    <p class="cv-title">Dedication</p>
+                    <p class="cv-desc">Dedication for Academic Excellence as an act of worship.</p>
+                </div>
+                <div class="cv-card">
+                    <div class="cv-letter">I</div>
+                    <p class="cv-title">Integrity</p>
+                    <p class="cv-desc">Integrity of Character in all things, seen and unseen.</p>
+                </div>
+                <div class="cv-card">
+                    <div class="cv-letter">C</div>
+                    <p class="cv-title">Compassion</p>
+                    <p class="cv-desc">Compassionate Love for Others as Christ loved us.</p>
+                </div>
+                <div class="cv-card">
+                    <div class="cv-letter">S</div>
+                    <p class="cv-title">Stewardship</p>
+                    <p class="cv-desc">Steward of God — holding all gifts faithfully for His glory.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-inner">
+            <div>
+                <div class="footer-brand">
+                    <img src="HDICS-LOGO.png" alt="HDICS Logo">
+                    <div>
+                        <p class="footer-brand-name">Holy Deliverance Integrated<br>Christian School</p>
+                        <p class="footer-brand-sub">Angono, Rizal Inc.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h5>Quick Links</h5>
+                <a href="index.html">Home</a>
+                <a href="about-us.html">About Us</a>
+                <a href="hdics-board.html">HDICS Board</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="#">Admissions</a>
+                <a href="#">Programs</a>
+            </div>
+            <div class="footer-col">
+                <h5>Contact</h5>
+                <p>Lot 2,4,6 Blk 3-4A Macopa St,<br>Aurora Subdivision, Angono, Rizal</p>
+                <a href="mailto:holy.deliverance.champions@gmail.com">holy.deliverance.champions@gmail.com</a>
+                <p>8442-4359 · 0960-541-9349</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2025 Holy Deliverance Integrated Christian School of Angono, Rizal Inc. All rights reserved.</span>
+        </div>
+    </footer>
+
+</body>
+</html>

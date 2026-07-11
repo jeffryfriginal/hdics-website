@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery — Holy Deliverance Integrated Christian School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .gallery-section { background: var(--cream); }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+        .carousel-block { display: flex; flex-direction: column; }
+        .carousel-block-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.9rem;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            border-radius: 18px;
+            overflow: hidden;
+            background: var(--navy);
+            box-shadow: 0 14px 40px rgba(15,32,64,0.12);
+        }
+        .carousel-track-wrap {
+            overflow: hidden;
+            width: 100%;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.4s ease;
+        }
+        .carousel-slide {
+            flex: 0 0 100%;
+            aspect-ratio: 4 / 3;
+            background-size: cover;
+            background-position: center;
+        }
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(15,32,64,0.65);
+            border: 1.5px solid rgba(255,255,255,0.3);
+            color: var(--white);
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            z-index: 2;
+            user-select: none;
+        }
+        .carousel-arrow:hover { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+        .carousel-arrow.prev { left: 0.9rem; }
+        .carousel-arrow.next { right: 0.9rem; }
+
+        .carousel-counter {
+            position: absolute;
+            bottom: 0.9rem;
+            right: 0.9rem;
+            background: rgba(15,32,64,0.65);
+            color: var(--white);
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 0.25rem 0.65rem;
+            border-radius: 100px;
+            z-index: 2;
+            letter-spacing: 0.03em;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .carousel-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--cream-dark);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            border: none;
+            padding: 0;
+        }
+        .carousel-dot.active { background: var(--gold); transform: scale(1.25); }
+        .carousel-dot:hover { background: var(--gold-light); }
+
+        @media (max-width: 768px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .carousel-arrow { width: 36px; height: 36px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <img src="HDICS-LOGO.png" alt="HDICS Logo">
+                <div class="nav-brand-text">
+                    <strong>Holy Deliverance</strong>
+                    <span>Integrated Christian School · Angono, Rizal</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li class="has-dropdown">
+                    <a href="about-us.html">About Us</a>
+                    <div class="dropdown-menu">
+                        <a href="about-us.html#vision">Vision Statement</a>
+                        <a href="about-us.html#mission">Mission</a>
+                        <a href="about-us.html#core-values">Core Values</a>
+                        <a href="hdics-board.html">HDICS Board</a>
+                    </div>
+                </li>
+                <li class="active"><a href="gallery.html">Gallery</a></li>
+                <li><a href="#">Admissions</a></li>
+                <li><a href="#">Programs</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="enroll-now.html" class="nav-cta">Enroll Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-banner">
+        <div class="page-banner-inner">
+            <p class="page-banner-crumb"><a href="index.html">Home</a> / Gallery</p>
+            <h1>Gallery</h1>
+            <p>Moments from campus life at HDICS.</p>
+        </div>
+    </div>
+
+    <section class="section gallery-section">
+        <div class="section-inner">
+            <p class="section-label" style="text-align:center;">Photo Gallery</p>
+            <h2 class="section-title" style="text-align:center; margin-bottom:2.5rem;">Life at HDICS</h2>
+
+            <div class="gallery-grid">
+
+                <div class="carousel-block">
+                    <h3 class="carousel-block-title">Campus Life</h3>
+                    <div class="carousel" data-carousel>
+                        <div class="carousel-track-wrap">
+                            <div class="carousel-track">
+                                <div class="carousel-slide" style="background-image:url('gallery-01.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-02.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-03.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-04.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-05.jpg');"></div>
+                            </div>
+                        </div>
+                        <button class="carousel-arrow prev" aria-label="Previous photo">&#8249;</button>
+                        <button class="carousel-arrow next" aria-label="Next photo">&#8250;</button>
+                        <div class="carousel-counter"></div>
+                    </div>
+                    <div class="carousel-dots"></div>
+                </div>
+
+                <div class="carousel-block">
+                    <h3 class="carousel-block-title">Academics</h3>
+                    <div class="carousel" data-carousel>
+                        <div class="carousel-track-wrap">
+                            <div class="carousel-track">
+                                <div class="carousel-slide" style="background-image:url('gallery-06.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-07.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-08.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-09.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-10.jpg');"></div>
+                            </div>
+                        </div>
+                        <button class="carousel-arrow prev" aria-label="Previous photo">&#8249;</button>
+                        <button class="carousel-arrow next" aria-label="Next photo">&#8250;</button>
+                        <div class="carousel-counter"></div>
+                    </div>
+                    <div class="carousel-dots"></div>
+                </div>
+
+                <div class="carousel-block">
+                    <h3 class="carousel-block-title">Events</h3>
+                    <div class="carousel" data-carousel>
+                        <div class="carousel-track-wrap">
+                            <div class="carousel-track">
+                                <div class="carousel-slide" style="background-image:url('gallery-11.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-12.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-13.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-14.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-15.jpg');"></div>
+                            </div>
+                        </div>
+                        <button class="carousel-arrow prev" aria-label="Previous photo">&#8249;</button>
+                        <button class="carousel-arrow next" aria-label="Next photo">&#8250;</button>
+                        <div class="carousel-counter"></div>
+                    </div>
+                    <div class="carousel-dots"></div>
+                </div>
+
+                <div class="carousel-block">
+                    <h3 class="carousel-block-title">Sports</h3>
+                    <div class="carousel" data-carousel>
+                        <div class="carousel-track-wrap">
+                            <div class="carousel-track">
+                                <div class="carousel-slide" style="background-image:url('gallery-16.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-17.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-18.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-19.jpg');"></div>
+                                <div class="carousel-slide" style="background-image:url('gallery-20.jpg');"></div>
+                            </div>
+                        </div>
+                        <button class="carousel-arrow prev" aria-label="Previous photo">&#8249;</button>
+                        <button class="carousel-arrow next" aria-label="Next photo">&#8250;</button>
+                        <div class="carousel-counter"></div>
+                    </div>
+                    <div class="carousel-dots"></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        <div class="footer-inner">
+            <div>
+                <div class="footer-brand">
+                    <img src="HDICS-LOGO.png" alt="HDICS Logo">
+                    <div>
+                        <p class="footer-brand-name">Holy Deliverance Integrated<br>Christian School</p>
+                        <p class="footer-brand-sub">Angono, Rizal Inc.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h5>Quick Links</h5>
+                <a href="index.html">Home</a>
+                <a href="about-us.html">About Us</a>
+                <a href="hdics-board.html">HDICS Board</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="enroll-now.html">Enroll Now</a>
+            </div>
+            <div class="footer-col">
+                <h5>Contact</h5>
+                <p>Lot 2,4,6 Blk 3-4A Macopa St,<br>Aurora Subdivision, Angono, Rizal</p>
+                <a href="mailto:holy.deliverance.champions@gmail.com">holy.deliverance.champions@gmail.com</a>
+                <p>8442-4359 · 0960-541-9349</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2025 Holy Deliverance Integrated Christian School of Angono, Rizal Inc. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            function initCarousel(block) {
+                const track = block.querySelector('.carousel-track');
+                const slides = track.children;
+                const total = slides.length;
+                const prevBtn = block.querySelector('.carousel-arrow.prev');
+                const nextBtn = block.querySelector('.carousel-arrow.next');
+                const counter = block.querySelector('.carousel-counter');
+                const dotsWrap = block.parentElement.querySelector('.carousel-dots');
+                let index = 0;
+
+                for (let i = 0; i < total; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('aria-label', 'Go to photo ' + (i + 1));
+                    dot.addEventListener('click', () => goTo(i));
+                    dotsWrap.appendChild(dot);
+                }
+                const dots = dotsWrap.children;
+
+                function render() {
+                    track.style.transform = 'translateX(-' + (index * 100) + '%)';
+                    counter.textContent = (index + 1) + ' / ' + total;
+                    for (let i = 0; i < dots.length; i++) {
+                        dots[i].classList.toggle('active', i === index);
+                    }
+                }
+
+                function goTo(i) {
+                    index = (i + total) % total;
+                    render();
+                }
+
+                prevBtn.addEventListener('click', () => goTo(index - 1));
+                nextBtn.addEventListener('click', () => goTo(index + 1));
+
+                render();
+            }
+
+            document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+        })();
+    </script>
+
+</body>
+</html>
