@@ -1,0 +1,10 @@
+{
+  "members": [
+    { "name": "Mr. Gabriel Rodante F. Avendaño", "role": "President", "photo": "board-avendano.jpg" },
+    { "name": "Dr. Ma. Theresa Dita Gracia Avendaño-Pitalbo, LPT, PhD.", "role": "Directress / Principal", "photo": "board-pitalbo.jpg" },
+    { "name": "Mrs. Matilde V. Tobias, MAGC", "role": "Assistant Principal / Head of Academic Affairs", "photo": "board-tobias.jpg" },
+    { "name": "Ms. Christina S. Avendaño, LPT", "role": "Marketing Head", "photo": "board-christina.jpg" },
+    { "name": "Engr. Salvador B. Pitalbo, Jr.", "role": "Head of Student Affairs / Building Administrator", "photo": "board-salvador.jpg" },
+    { "name": "Mr. Arturo F. Avendaño Jr.", "role": "Finance Director", "photo": "board-arturo.jpg" }
+  ]
+}

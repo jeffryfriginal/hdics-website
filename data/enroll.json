@@ -1,0 +1,22 @@
+{
+  "levels": [
+    {
+      "name": "Elementary",
+      "grades": "Kinder – Grade 6",
+      "photo": "enroll-elementary.jpg",
+      "form_url": "https://forms.google.com/PLACEHOLDER-ELEMENTARY"
+    },
+    {
+      "name": "Junior High School",
+      "grades": "Grade 7 – Grade 10",
+      "photo": "enroll-jhs.jpg",
+      "form_url": "https://forms.google.com/PLACEHOLDER-JUNIORHIGH"
+    },
+    {
+      "name": "Senior High School",
+      "grades": "Grade 11 – Grade 12",
+      "photo": "enroll-shs.jpg",
+      "form_url": "https://forms.google.com/PLACEHOLDER-SENIORHIGH"
+    }
+  ]
+}
