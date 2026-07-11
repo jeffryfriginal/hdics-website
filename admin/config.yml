@@ -1,0 +1,88 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: ""
+public_folder: ""
+
+collections:
+  - name: "board"
+    label: "Board Members"
+    files:
+      - file: "data/board.json"
+        label: "Board Members"
+        name: "board"
+        fields:
+          - label: "Members"
+            name: "members"
+            widget: "list"
+            summary: "{{name}} — {{role}}"
+            fields:
+              - { label: "Full Name", name: "name", widget: "string" }
+              - { label: "Role / Position", name: "role", widget: "string" }
+              - { label: "Photo", name: "photo", widget: "image" }
+
+  - name: "gallery"
+    label: "Gallery"
+    files:
+      - file: "data/gallery.json"
+        label: "Gallery Carousels"
+        name: "gallery"
+        fields:
+          - label: "Carousels"
+            name: "carousels"
+            widget: "list"
+            summary: "{{title}}"
+            fields:
+              - { label: "Carousel Title", name: "title", widget: "string" }
+              - label: "Images"
+                name: "images"
+                widget: "list"
+                field: { label: "Image", name: "image", widget: "image" }
+
+  - name: "enroll"
+    label: "Enrollment Levels"
+    files:
+      - file: "data/enroll.json"
+        label: "Enrollment Levels"
+        name: "enroll"
+        fields:
+          - label: "Levels"
+            name: "levels"
+            widget: "list"
+            summary: "{{name}}"
+            fields:
+              - { label: "Level Name", name: "name", widget: "string" }
+              - { label: "Grade Range", name: "grades", widget: "string" }
+              - { label: "Photo", name: "photo", widget: "image" }
+              - { label: "Google Form URL", name: "form_url", widget: "string" }
+
+  - name: "news"
+    label: "Homepage News"
+    files:
+      - file: "data/news.json"
+        label: "News Items"
+        name: "news"
+        fields:
+          - label: "Items"
+            name: "items"
+            widget: "list"
+            summary: "{{title}}"
+            fields:
+              - { label: "Tag / Category", name: "tag", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "description", widget: "text" }
+              - { label: "Link (e.g. Facebook post)", name: "link", widget: "string" }
+
+  - name: "hero"
+    label: "Homepage Hero"
+    files:
+      - file: "data/hero.json"
+        label: "Hero Section"
+        name: "hero"
+        fields:
+          - { label: "Eyebrow Text", name: "eyebrow", widget: "string" }
+          - { label: "Heading — First Word(s)", name: "heading_start", widget: "string" }
+          - { label: "Heading — Emphasized Word (gold italic)", name: "heading_emphasis", widget: "string" }
+          - { label: "Heading — Second Line", name: "heading_line2", widget: "string" }
+          - { label: "Subheading", name: "subheading", widget: "text" }
