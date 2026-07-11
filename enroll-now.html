@@ -152,40 +152,12 @@
             <p class="section-label" style="text-align:center;">Select a Level</p>
             <h2 class="section-title" style="text-align:center; margin-bottom:2.5rem;">Where Does Your Child Belong?</h2>
 
-            <div class="enroll-grid">
-                <a href="https://forms.google.com/PLACEHOLDER-ELEMENTARY" target="_blank" rel="noopener noreferrer" class="enroll-card">
-                    <div class="enroll-card-photo" style="background-image: url('enroll-elementary.jpg');">
-                        <span class="enroll-card-grade">Kinder – Grade 6</span>
-                        <div class="enroll-card-body">
-                            <h3>Elementary</h3>
-                            <span class="enroll-card-cta">Enroll Now</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="https://forms.google.com/PLACEHOLDER-JUNIORHIGH" target="_blank" rel="noopener noreferrer" class="enroll-card">
-                    <div class="enroll-card-photo" style="background-image: url('enroll-jhs.jpg');">
-                        <span class="enroll-card-grade">Grade 7 – Grade 10</span>
-                        <div class="enroll-card-body">
-                            <h3>Junior High School</h3>
-                            <span class="enroll-card-cta">Enroll Now</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="https://forms.google.com/PLACEHOLDER-SENIORHIGH" target="_blank" rel="noopener noreferrer" class="enroll-card">
-                    <div class="enroll-card-photo" style="background-image: url('enroll-shs.jpg');">
-                        <span class="enroll-card-grade">Grade 11 – Grade 12</span>
-                        <div class="enroll-card-body">
-                            <h3>Senior High School</h3>
-                            <span class="enroll-card-cta">Enroll Now</span>
-                        </div>
-                    </div>
-                </a>
+            <div class="enroll-grid" id="enroll-grid">
+                <p style="color:rgba(15,32,64,0.4); font-size:0.9rem;">Loading enrollment options…</p>
             </div>
 
             <div class="enroll-note">
-                Have questions before enrolling? Reach out to us directly.<br>
+                Have questions before applying? Reach out to us directly.<br>
                 <a href="mailto:holy.deliverance.champions@gmail.com">holy.deliverance.champions@gmail.com</a> &nbsp;·&nbsp; 8442-4359 &nbsp;·&nbsp; 0960-541-9349
             </div>
         </div>
@@ -221,6 +193,29 @@
             <span>&copy; 2025 Holy Deliverance Integrated Christian School of Angono, Rizal Inc. All rights reserved.</span>
         </div>
     </footer>
+
+    <script>
+        fetch('data/enroll.json')
+            .then(res => res.json())
+            .then(data => {
+                const grid = document.getElementById('enroll-grid');
+                grid.innerHTML = data.levels.map(lvl => `
+                    <a href="${lvl.form_url}" target="_blank" rel="noopener noreferrer" class="enroll-card">
+                        <div class="enroll-card-photo" style="background-image: url('${lvl.photo}');">
+                            <span class="enroll-card-grade">${lvl.grades}</span>
+                            <div class="enroll-card-body">
+                                <h3>${lvl.name}</h3>
+                                <span class="enroll-card-cta">Apply Now</span>
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('enroll-grid').innerHTML = '<p style="color:rgba(15,32,64,0.4);">Unable to load enrollment options right now.</p>';
+                console.error('Enrollment data failed to load:', err);
+            });
+    </script>
 
 </body>
 </html>

@@ -126,37 +126,8 @@
             <p class="section-label" style="text-align:center;">Board Members</p>
             <h2 class="section-title" style="text-align:center; margin-bottom:2.5rem;">Our Leadership Team</h2>
 
-            <div class="board-grid">
-                <div class="board-card">
-                    <div class="board-avatar"><img src="board-avendano.jpg" alt="Mr. Gabriel Rodante F. Avendaño"></div>
-                    <p class="board-name">Mr. Gabriel Rodante F. Avendaño</p>
-                    <p class="board-role">President</p>
-                </div>
-                <div class="board-card">
-                    <div class="board-avatar"><img src="board-pitalbo.jpg" alt="Dr. Ma. Theresa Dita Gracia Avendaño-Pitalbo"></div>
-                    <p class="board-name">Dr. Ma. Theresa Dita Gracia Avendaño-Pitalbo, LPT, PhD.</p>
-                    <p class="board-role">Directress / Principal</p>
-                </div>
-                <div class="board-card">
-                    <div class="board-avatar"><img src="board-tobias.jpg" alt="Mrs. Matilde V. Tobias"></div>
-                    <p class="board-name">Mrs. Matilde V. Tobias, MAGC</p>
-                    <p class="board-role">Assistant Principal / Head of Academic Affairs</p>
-                </div>
-                <div class="board-card">
-                    <div class="board-avatar"><img src="board-christina.jpg" alt="Ms. Christina S. Avendaño"></div>
-                    <p class="board-name">Ms. Christina S. Avendaño, LPT</p>
-                    <p class="board-role">Marketing Head</p>
-                </div>
-                <div class="board-card">
-                    <div class="board-avatar"><img src="board-salvador.jpg" alt="Engr. Salvador B. Pitalbo, Jr."></div>
-                    <p class="board-name">Engr. Salvador B. Pitalbo, Jr.</p>
-                    <p class="board-role">Head of Student Affairs / Building Administrator</p>
-                </div>
-                <div class="board-card">
-                    <div class="board-avatar"><img src="board-arturo.jpg" alt="Mr. Arturo F. Avendaño Jr."></div>
-                    <p class="board-name">Mr. Arturo F. Avendaño Jr.</p>
-                    <p class="board-role">Finance Director</p>
-                </div>
+            <div class="board-grid" id="board-grid">
+                <p style="color:rgba(15,32,64,0.4); font-size:0.9rem;">Loading board members…</p>
             </div>
 
             <div class="contact-note">
@@ -197,6 +168,25 @@
             <span>&copy; 2025 Holy Deliverance Integrated Christian School of Angono, Rizal Inc. All rights reserved.</span>
         </div>
     </footer>
+
+    <script>
+        fetch('data/board.json')
+            .then(res => res.json())
+            .then(data => {
+                const grid = document.getElementById('board-grid');
+                grid.innerHTML = data.members.map(m => `
+                    <div class="board-card">
+                        <div class="board-avatar"><img src="${m.photo}" alt="${m.name}"></div>
+                        <p class="board-name">${m.name}</p>
+                        <p class="board-role">${m.role}</p>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('board-grid').innerHTML = '<p style="color:rgba(15,32,64,0.4);">Unable to load board members right now.</p>';
+                console.error('Board data failed to load:', err);
+            });
+    </script>
 
 </body>
 </html>
