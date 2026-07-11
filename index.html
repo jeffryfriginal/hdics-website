@@ -232,9 +232,9 @@
     <section class="hero">
         <div class="hero-bg"></div>
         <div class="hero-inner">
-            <div class="hero-eyebrow">Angono, Rizal · Est. in Faith</div>
-            <h1>Nurturing <em>Minds,</em><br>Building Futures</h1>
-            <p>A Christ-centered school where academic excellence is grounded in faith, character, and the fear of the Lord.</p>
+            <div class="hero-eyebrow" id="hero-eyebrow">Angono, Rizal · Est. in Faith</div>
+            <h1 id="hero-heading">Nurturing <em>Minds,</em><br>Building Futures</h1>
+            <p id="hero-subheading">A Christ-centered school where academic excellence is grounded in faith, character, and the fear of the Lord.</p>
             <div class="hero-actions">
                 <a href="enroll-now.html" class="btn-primary">Enroll Now</a>
                 <a href="#news" class="btn-outline">Latest Updates</a>
@@ -317,43 +317,8 @@
                 </div>
                 <a href="https://www.facebook.com/batangholy1" target="_blank" rel="noopener">See all on Facebook</a>
             </div>
-            <div class="news-grid">
-                <div class="news-card">
-                    <div class="news-card-accent"></div>
-                    <div class="news-card-body">
-                        <span class="news-card-tag">Sports</span>
-                        <h4>Welcoming the New Basketball HS Coach</h4>
-                        <p>We are excited to introduce our new High School Basketball Head Coach. Get ready for a season of discipline, teamwork, and faith in action.</p>
-                        <a href="https://www.facebook.com/batangholy1/posts/pfbid02spd4eePSZVncGa78WCY9rAFRyxgDssUFcz4TwL6dXpJw9RCq9MHWhX1xgMSehsxrl" target="_blank" rel="noopener noreferrer" class="news-card-link">View on Facebook</a>
-                    </div>
-                </div>
-                <div class="news-card">
-                    <div class="news-card-accent"></div>
-                    <div class="news-card-body">
-                        <span class="news-card-tag">Community</span>
-                        <h4>1st PTF Meeting &amp; Depression Management Seminar</h4>
-                        <p>Join us for our first Parent-Teacher-Faculty meeting, alongside an insightful seminar on managing mental health among students.</p>
-                        <a href="https://www.facebook.com/batangholy1/posts/pfbid0A8pYmma2yrSe4zgFSynFBDxJ6AeP9QHSbZx1kViFXpQtQ6PiGLFELPovbpaxRF9Al" target="_blank" rel="noopener noreferrer" class="news-card-link">View on Facebook</a>
-                    </div>
-                </div>
-                <div class="news-card">
-                    <div class="news-card-accent"></div>
-                    <div class="news-card-body">
-                        <span class="news-card-tag">Publications</span>
-                        <h4>New School Paper Adviser Announced</h4>
-                        <p>We welcome our new School Paper Adviser, who brings fresh vision and leadership to the HDICS school publication.</p>
-                        <a href="https://www.facebook.com/batangholy1/posts/pfbid0arCmX277fqUMH2k9MWyk6xANqCcH4neB5rWtgq54kw2dtP4eDn3LJZdBN1pt5umel" target="_blank" rel="noopener noreferrer" class="news-card-link">View on Facebook</a>
-                    </div>
-                </div>
-                <div class="news-card">
-                    <div class="news-card-accent"></div>
-                    <div class="news-card-body">
-                        <span class="news-card-tag">Accreditation</span>
-                        <h4>PEAC Recertification — Successfully Achieved</h4>
-                        <p>HDICS has successfully completed its PEAC Recertification, affirming our ongoing commitment to quality, standards, and Christ-centered education.</p>
-                        <a href="https://www.facebook.com/share/p/1FwpmE9PeR/" target="_blank" rel="noopener noreferrer" class="news-card-link">View on Facebook</a>
-                    </div>
-                </div>
+            <div class="news-grid" id="news-grid">
+                <p style="color:rgba(15,32,64,0.35); font-size:0.9rem;">Loading news…</p>
             </div>
         </div>
     </section>
@@ -405,6 +370,39 @@
             <span>&copy; 2025 Holy Deliverance Integrated Christian School of Angono, Rizal Inc. All rights reserved.</span>
         </div>
     </footer>
+
+    <script>
+        fetch('data/hero.json')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('hero-eyebrow').textContent = data.eyebrow;
+                document.getElementById('hero-heading').innerHTML =
+                    `${data.heading_start} <em>${data.heading_emphasis}</em><br>${data.heading_line2}`;
+                document.getElementById('hero-subheading').textContent = data.subheading;
+            })
+            .catch(err => console.error('Hero data failed to load:', err));
+
+        fetch('data/news.json')
+            .then(res => res.json())
+            .then(data => {
+                const grid = document.getElementById('news-grid');
+                grid.innerHTML = data.items.map(item => `
+                    <div class="news-card">
+                        <div class="news-card-accent"></div>
+                        <div class="news-card-body">
+                            <span class="news-card-tag">${item.tag}</span>
+                            <h4>${item.title}</h4>
+                            <p>${item.description}</p>
+                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-card-link">View on Facebook</a>
+                        </div>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('news-grid').innerHTML = '<p style="color:rgba(15,32,64,0.35);">Unable to load news right now.</p>';
+                console.error('News data failed to load:', err);
+            });
+    </script>
 
 </body>
 </html>

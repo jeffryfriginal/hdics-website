@@ -156,84 +156,8 @@
             <p class="section-label" style="text-align:center;">Photo Gallery</p>
             <h2 class="section-title" style="text-align:center; margin-bottom:2.5rem;">Life at HDICS</h2>
 
-            <div class="gallery-grid">
-
-                <div class="carousel-block">
-                    <h3 class="carousel-block-title">Campus Life</h3>
-                    <div class="carousel" data-carousel>
-                        <div class="carousel-track-wrap">
-                            <div class="carousel-track">
-                                <div class="carousel-slide" style="background-image:url('gallery-01.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-02.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-03.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-04.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-05.jpg');"></div>
-                            </div>
-                        </div>
-                        <button class="carousel-arrow prev" aria-label="Previous photo">&#8249;</button>
-                        <button class="carousel-arrow next" aria-label="Next photo">&#8250;</button>
-                        <div class="carousel-counter"></div>
-                    </div>
-                    <div class="carousel-dots"></div>
-                </div>
-
-                <div class="carousel-block">
-                    <h3 class="carousel-block-title">Academics</h3>
-                    <div class="carousel" data-carousel>
-                        <div class="carousel-track-wrap">
-                            <div class="carousel-track">
-                                <div class="carousel-slide" style="background-image:url('gallery-06.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-07.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-08.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-09.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-10.jpg');"></div>
-                            </div>
-                        </div>
-                        <button class="carousel-arrow prev" aria-label="Previous photo">&#8249;</button>
-                        <button class="carousel-arrow next" aria-label="Next photo">&#8250;</button>
-                        <div class="carousel-counter"></div>
-                    </div>
-                    <div class="carousel-dots"></div>
-                </div>
-
-                <div class="carousel-block">
-                    <h3 class="carousel-block-title">Events</h3>
-                    <div class="carousel" data-carousel>
-                        <div class="carousel-track-wrap">
-                            <div class="carousel-track">
-                                <div class="carousel-slide" style="background-image:url('gallery-11.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-12.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-13.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-14.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-15.jpg');"></div>
-                            </div>
-                        </div>
-                        <button class="carousel-arrow prev" aria-label="Previous photo">&#8249;</button>
-                        <button class="carousel-arrow next" aria-label="Next photo">&#8250;</button>
-                        <div class="carousel-counter"></div>
-                    </div>
-                    <div class="carousel-dots"></div>
-                </div>
-
-                <div class="carousel-block">
-                    <h3 class="carousel-block-title">Sports</h3>
-                    <div class="carousel" data-carousel>
-                        <div class="carousel-track-wrap">
-                            <div class="carousel-track">
-                                <div class="carousel-slide" style="background-image:url('gallery-16.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-17.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-18.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-19.jpg');"></div>
-                                <div class="carousel-slide" style="background-image:url('gallery-20.jpg');"></div>
-                            </div>
-                        </div>
-                        <button class="carousel-arrow prev" aria-label="Previous photo">&#8249;</button>
-                        <button class="carousel-arrow next" aria-label="Next photo">&#8250;</button>
-                        <div class="carousel-counter"></div>
-                    </div>
-                    <div class="carousel-dots"></div>
-                </div>
-
+            <div class="gallery-grid" id="gallery-grid">
+                <p style="color:rgba(15,32,64,0.4); font-size:0.9rem;">Loading gallery…</p>
             </div>
         </div>
     </section>
@@ -310,7 +234,38 @@
                 render();
             }
 
-            document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+            function buildCarouselBlock(carousel) {
+                const slidesHtml = carousel.images.map(img =>
+                    `<div class="carousel-slide" style="background-image:url('${img}');"></div>`
+                ).join('');
+
+                return `
+                    <div class="carousel-block">
+                        <h3 class="carousel-block-title">${carousel.title}</h3>
+                        <div class="carousel" data-carousel>
+                            <div class="carousel-track-wrap">
+                                <div class="carousel-track">${slidesHtml}</div>
+                            </div>
+                            <button class="carousel-arrow prev" aria-label="Previous photo">&#8249;</button>
+                            <button class="carousel-arrow next" aria-label="Next photo">&#8250;</button>
+                            <div class="carousel-counter"></div>
+                        </div>
+                        <div class="carousel-dots"></div>
+                    </div>
+                `;
+            }
+
+            fetch('data/gallery.json')
+                .then(res => res.json())
+                .then(data => {
+                    const grid = document.getElementById('gallery-grid');
+                    grid.innerHTML = data.carousels.map(buildCarouselBlock).join('');
+                    document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+                })
+                .catch(err => {
+                    document.getElementById('gallery-grid').innerHTML = '<p style="color:rgba(15,32,64,0.4);">Unable to load gallery right now.</p>';
+                    console.error('Gallery data failed to load:', err);
+                });
         })();
     </script>
 
