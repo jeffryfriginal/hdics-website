@@ -51,6 +51,63 @@
             white-space: pre-line;
             text-align: center;
         }
+        .hymn-audio {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--cream-dark);
+            text-align: center;
+        }
+        .hymn-audio audio {
+            width: 100%;
+            max-width: 460px;
+        }
+        .hymn-video {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--cream-dark);
+        }
+        .hymn-video-facade {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            background: var(--navy);
+        }
+        .hymn-video-facade img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .hymn-video-play {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 68px; height: 68px;
+            background: rgba(201,146,42,0.92);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .hymn-video-facade:hover .hymn-video-play { background: var(--gold-light); transform: translate(-50%, -50%) scale(1.08); }
+        .hymn-video-play::after {
+            content: '';
+            border-style: solid;
+            border-width: 12px 0 12px 20px;
+            border-color: transparent transparent transparent var(--navy);
+            margin-left: 5px;
+        }
+        .hymn-video iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 14px;
+            border: none;
+            display: block;
+        }
         @media (max-width: 600px) {
             .hymn-card { padding: 2rem 1.5rem; }
         }
@@ -138,17 +195,64 @@
     </footer>
 
     <script>
+        function extractYouTubeId(url) {
+            if (!url) return null;
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=)([\w-]+)/,
+                /(?:youtu\.be\/)([\w-]+)/,
+                /(?:youtube\.com\/embed\/)([\w-]+)/
+            ];
+            for (const p of patterns) {
+                const match = url.match(p);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
         fetch('data/hymn.json')
             .then(res => res.json())
             .then(data => {
                 const card = document.getElementById('hymn-content');
                 const creditLine = data.composer ? `<p class="hymn-credit">${data.composer}</p>` : '';
+
+                let audioHtml = '';
+                if (data.audio_file) {
+                    audioHtml = `
+                        <div class="hymn-audio">
+                            <audio controls src="${data.audio_file}"></audio>
+                        </div>
+                    `;
+                }
+
+                let videoHtml = '';
+                const ytId = extractYouTubeId(data.video_url);
+                if (ytId) {
+                    videoHtml = `
+                        <div class="hymn-video">
+                            <div class="hymn-video-facade" id="hymn-video-facade" data-yt-id="${ytId}">
+                                <img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" alt="Watch the school hymn video" loading="lazy">
+                                <div class="hymn-video-play"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+
                 card.innerHTML = `
                     <div class="hymn-card-gold-line"></div>
                     <h2 class="hymn-title">${data.title}</h2>
                     ${creditLine}
                     <p class="hymn-lyrics">${data.lyrics}</p>
+                    ${audioHtml}
+                    ${videoHtml}
                 `;
+
+                const facade = document.getElementById('hymn-video-facade');
+                if (facade) {
+                    facade.addEventListener('click', () => {
+                        const id = facade.getAttribute('data-yt-id');
+                        facade.outerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" title="School Hymn Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                    });
+                }
             })
             .catch(err => {
                 document.getElementById('hymn-content').innerHTML = '<div class="hymn-card-gold-line"></div><p style="text-align:center; color:rgba(15,32,64,0.4);">Unable to load the school hymn right now.</p>';
