@@ -1,11 +1,410 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Content Manager — HDICS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holy Deliverance Integrated Christian School of Angono, Rizal Inc.</title>
+    <meta name="description" content="Holy Deliverance Integrated Christian School of Angono, Rizal Inc. - A Christ-centered academic institution nurturing excellence and values.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .hero {
+            background: var(--navy) url('hero-building.jpg') center center / cover no-repeat;
+            position: relative;
+            overflow: hidden;
+            min-height: 88vh;
+            display: flex;
+            align-items: center;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(100deg, rgba(15,32,64,0.92) 0%, rgba(15,32,64,0.75) 45%, rgba(15,32,64,0.55) 100%),
+                radial-gradient(ellipse 60% 80% at 80% 50%, rgba(201,146,42,0.14) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 60% at 10% 80%, rgba(201,146,42,0.08) 0%, transparent 50%);
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem 5rem;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(201,146,42,0.15);
+            border: 1px solid rgba(201,146,42,0.35);
+            color: var(--gold-light);
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.9rem;
+            border-radius: 100px;
+            margin-bottom: 2rem;
+            animation: fadeUp 0.6s ease both;
+        }
+        .hero-eyebrow::before { content: '✦'; font-size: 0.6em; }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1.08;
+            max-width: 700px;
+            margin-bottom: 1.5rem;
+            animation: fadeUp 0.7s 0.1s ease both;
+        }
+        .hero h1 em { font-style: italic; color: var(--gold-light); }
+        .hero p {
+            color: rgba(255,255,255,0.72);
+            font-size: 1.15rem;
+            max-width: 540px;
+            line-height: 1.75;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+            animation: fadeUp 0.7s 0.2s ease both;
+        }
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.7s 0.3s ease both; }
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 4rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            animation: fadeUp 0.7s 0.45s ease both;
+        }
+        .hero-stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            line-height: 1;
+        }
+        .hero-stat-label {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 0.3rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .verse-band { background: var(--gold); overflow: hidden; padding: 0.7rem 0; white-space: nowrap; }
+        .verse-track { display: inline-block; animation: marquee 32s linear infinite; }
+        .verse-track span {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--navy);
+            padding: 0 3rem;
+        }
+        .verse-track span::before { content: '✦ '; font-style: normal; font-size: 0.7em; }
+        @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        .pillars { background: var(--white); }
+        .pillars-header { text-align: center; margin-bottom: 3.5rem; }
+        .pillars-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+        .pillar-card {
+            background: var(--cream);
+            border: 1px solid var(--cream-dark);
+            border-radius: 16px;
+            padding: 2rem 1.75rem;
+            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+        .pillar-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+            transform-origin: left;
+        }
+        .pillar-card:hover::before { transform: scaleX(1); }
+        .pillar-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(15,32,64,0.1); border-color: rgba(201,146,42,0.3); }
+        .pillar-icon {
+            width: 48px; height: 48px;
+            background: rgba(201,146,42,0.12);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+        .pillar-letter { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; color: var(--gold); line-height: 1; }
+        .pillar-title { font-weight: 600; font-size: 0.88rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.5rem; }
+        .pillar-desc { font-size: 0.88rem; color: var(--gray-text); line-height: 1.65; font-weight: 300; }
+        .news { background: var(--cream); }
+        .news-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+        .news-header a { color: var(--gold); text-decoration: none; font-weight: 600; font-size: 0.9rem; border-bottom: 1.5px solid var(--gold); padding-bottom: 1px; }
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .news-card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--cream-dark);
+            transition: transform 0.25s, box-shadow 0.25s;
+            display: flex;
+            flex-direction: column;
+        }
+        .news-card:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(15,32,64,0.1); }
+        .news-card-accent { height: 4px; background: linear-gradient(90deg, var(--navy), var(--gold)); }
+        .news-card-body { padding: 1.6rem; flex: 1; display: flex; flex-direction: column; }
+        .news-card-tag {
+            display: inline-block;
+            background: rgba(201,146,42,0.1);
+            color: var(--gold);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.22rem 0.6rem;
+            border-radius: 100px;
+            margin-bottom: 0.85rem;
+        }
+        .news-card h4 { font-family: 'Playfair Display', serif; font-size: 1.12rem; font-weight: 700; color: var(--navy); line-height: 1.35; margin-bottom: 0.75rem; }
+        .news-card p { font-size: 0.88rem; color: var(--gray-text); line-height: 1.7; font-weight: 300; flex: 1; }
+        .news-card-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 1.25rem;
+            color: var(--navy); font-weight: 600; font-size: 0.86rem;
+            text-decoration: none; transition: color 0.2s;
+        }
+        .news-card-link::after { content: '→'; transition: transform 0.2s; }
+        .news-card-link:hover { color: var(--gold); }
+        .news-card-link:hover::after { transform: translateX(3px); }
+        .cta-strip { background: var(--navy); position: relative; overflow: hidden; padding: 5rem 2rem; }
+        .cta-strip::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 70% 100% at 100% 50%, rgba(201,146,42,0.12) 0%, transparent 60%);
+        }
+        .cta-strip-inner { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+        .cta-strip h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.5rem); color: var(--white); font-weight: 700; }
+        .cta-strip p { color: rgba(255,255,255,0.6); font-size: 0.95rem; margin-top: 0.5rem; font-weight: 300; }
+        @media (max-width: 768px) {
+            .hero-stats { gap: 2rem; }
+            .cta-strip-inner { flex-direction: column; text-align: center; }
+            .news-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
 </head>
 <body>
-    <script src="https://unpkg.com/decap-cms@3.11.0/dist/decap-cms.js"></script>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <img src="HDICS-LOGO.png" alt="HDICS Logo">
+                <div class="nav-brand-text">
+                    <strong>Holy Deliverance</strong>
+                    <span>Integrated Christian School · Angono, Rizal</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li class="has-dropdown">
+                    <a href="about-us.html">About Us</a>
+                    <div class="dropdown-menu">
+                        <a href="about-us.html#vision">Vision Statement</a>
+                        <a href="about-us.html#mission">Mission</a>
+                        <a href="about-us.html#core-values">Core Values</a>
+                        <a href="hdics-board.html">HDICS Board</a>
+                        <a href="hymn.html">School Hymn</a>
+                    </div>
+                </li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="#">Admissions</a></li>
+                <li><a href="#">Programs</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="enroll-now.html" class="nav-cta">Enroll Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-inner">
+            <div class="hero-eyebrow" id="hero-eyebrow">Angono, Rizal · Est. in Faith</div>
+            <h1 id="hero-heading">Nurturing <em>Minds,</em><br>Building Futures</h1>
+            <p id="hero-subheading">A Christ-centered school where academic excellence is grounded in faith, character, and the fear of the Lord.</p>
+            <div class="hero-actions">
+                <a href="enroll-now.html" class="btn-primary">Enroll Now</a>
+                <a href="#news" class="btn-outline">Latest Updates</a>
+            </div>
+            <div class="hero-stats">
+                <div>
+                    <div class="hero-stat-number">PEAC</div>
+                    <div class="hero-stat-label">Certified & Recertified</div>
+                </div>
+                <div>
+                    <div class="hero-stat-number">K–12</div>
+                    <div class="hero-stat-label">Integrated Programs</div>
+                </div>
+                <div>
+                    <div class="hero-stat-number">Faith</div>
+                    <div class="hero-stat-label">At the Center</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VERSE MARQUEE -->
+    <div class="verse-band" aria-hidden="true">
+        <div class="verse-track">
+            <span>"Train up a child in the way he should go" — Proverbs 22:6</span>
+            <span>"The fear of the LORD is the beginning of wisdom" — Proverbs 9:10</span>
+            <span>"I can do all things through Christ who strengthens me" — Philippians 4:13</span>
+            <span>"Whatever you do, work heartily, as for the Lord" — Colossians 3:23</span>
+            <span>"Train up a child in the way he should go" — Proverbs 22:6</span>
+            <span>"The fear of the LORD is the beginning of wisdom" — Proverbs 9:10</span>
+            <span>"I can do all things through Christ who strengthens me" — Philippians 4:13</span>
+            <span>"Whatever you do, work heartily, as for the Lord" — Colossians 3:23</span>
+        </div>
+    </div>
+
+    <!-- CORE VALUES PILLARS -->
+    <section class="section pillars">
+        <div class="section-inner">
+            <div class="pillars-header">
+                <p class="section-label">Who We Are</p>
+                <h2 class="section-title">Built on Five Pillars</h2>
+            </div>
+            <div class="pillars-grid">
+                <div class="pillar-card">
+                    <div class="pillar-icon"><span class="pillar-letter">H</span></div>
+                    <p class="pillar-title">Honor & Glorify God</p>
+                    <p class="pillar-desc">Everything we do flows from worship. God is first in our classrooms, in our halls, and in our community.</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon"><span class="pillar-letter">D</span></div>
+                    <p class="pillar-title">Dedication for Excellence</p>
+                    <p class="pillar-desc">Academic rigor is not separate from faith — it is an expression of it. We pursue excellence as stewards of God-given gifts.</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon"><span class="pillar-letter">I</span></div>
+                    <p class="pillar-title">Integrity of Character</p>
+                    <p class="pillar-desc">We form students whose word is their bond, whose actions match their convictions.</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon"><span class="pillar-letter">C</span></div>
+                    <p class="pillar-title">Compassionate Love</p>
+                    <p class="pillar-desc">Love for God overflows into love for others. We build a community where every student is seen and cared for.</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon"><span class="pillar-letter">S</span></div>
+                    <p class="pillar-title">Stewardship of God</p>
+                    <p class="pillar-desc">We teach students to hold all things lightly — time, gifts, resources — as faithful stewards of what God has given.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEWS -->
+    <section class="section news" id="news">
+        <div class="section-inner">
+            <div class="news-header">
+                <div>
+                    <p class="section-label">School News</p>
+                    <h2 class="section-title">Latest News &amp; Announcements</h2>
+                </div>
+                <a href="https://www.facebook.com/batangholy1" target="_blank" rel="noopener">See all on Facebook</a>
+            </div>
+            <div class="news-grid" id="news-grid">
+                <p style="color:rgba(15,32,64,0.35); font-size:0.9rem;">Loading news…</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA STRIP -->
+    <section class="cta-strip">
+        <div class="cta-strip-inner">
+            <div>
+                <h2>Ready to join the HDICS family?</h2>
+                <p>Seats are limited. Begin your child's Christ-centered academic journey today.</p>
+            </div>
+            <a href="enroll-now.html" class="btn-primary">Apply for Admission</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div>
+                <div class="footer-brand">
+                    <img src="HDICS-LOGO.png" alt="HDICS Logo">
+                    <div>
+                        <p class="footer-brand-name">Holy Deliverance Integrated<br>Christian School</p>
+                        <p class="footer-brand-sub">Angono, Rizal Inc.</p>
+                    </div>
+                </div>
+                <p style="font-size:0.82rem; margin-top:1.2rem; line-height:1.75; color:rgba(255,255,255,0.35);">
+                    Nurturing Minds, Building Futures — one student at a time, to the glory of God.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h5>Quick Links</h5>
+                <a href="index.html">Home</a>
+                <a href="about-us.html">About Us</a>
+                <a href="hdics-board.html">HDICS Board</a>
+                <a href="hymn.html">School Hymn</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="#">Admissions</a>
+                <a href="#">Programs</a>
+            </div>
+            <div class="footer-col">
+                <h5>Contact</h5>
+                <p>Lot 2,4,6 Blk 3-4A Macopa St,<br>Aurora Subdivision, Angono, Rizal</p>
+                <a href="mailto:holy.deliverance.champions@gmail.com" style="margin-top:0.5rem;">holy.deliverance.champions@gmail.com</a>
+                <p style="margin-top:0.3rem;">8442-4359 · 0960-541-9349</p>
+                <a href="https://www.facebook.com/batangholy1" target="_blank" rel="noopener" style="margin-top:0.75rem; color: rgba(201,146,42,0.7);">facebook.com/batangholy1</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2025 Holy Deliverance Integrated Christian School of Angono, Rizal Inc. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script>
+        fetch('data/hero.json')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('hero-eyebrow').textContent = data.eyebrow;
+                document.getElementById('hero-heading').innerHTML =
+                    `${data.heading_start} <em>${data.heading_emphasis}</em><br>${data.heading_line2}`;
+                document.getElementById('hero-subheading').textContent = data.subheading;
+            })
+            .catch(err => console.error('Hero data failed to load:', err));
+
+        fetch('data/news.json')
+            .then(res => res.json())
+            .then(data => {
+                const grid = document.getElementById('news-grid');
+                grid.innerHTML = data.items.map(item => `
+                    <div class="news-card">
+                        <div class="news-card-accent"></div>
+                        <div class="news-card-body">
+                            <span class="news-card-tag">${item.tag}</span>
+                            <h4>${item.title}</h4>
+                            <p>${item.description}</p>
+                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-card-link">View on Facebook</a>
+                        </div>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('news-grid').innerHTML = '<p style="color:rgba(15,32,64,0.35);">Unable to load news right now.</p>';
+                console.error('News data failed to load:', err);
+            });
+    </script>
+
 </body>
 </html>
