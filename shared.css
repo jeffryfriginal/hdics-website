@@ -75,7 +75,7 @@ body {
 .dropdown-menu {
     display: none;
     position: absolute;
-    top: calc(100% + 8px);
+    top: 100%;
     left: 0;
     background: var(--white);
     border-radius: 10px;
