@@ -16,7 +16,7 @@ backend:
 # Better Decap + Bridge logo (optional)
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 # Add site links in Decap CMS (optional)
-site_url: https://batangholy.netlify.app
+site_url: https://jeffryfriginal.github.io/hdics-website
 
 media_folder: "uploads"
 public_folder: "uploads"
