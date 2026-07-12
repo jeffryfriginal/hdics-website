@@ -2,19 +2,40 @@
   "carousels": [
     {
       "title": "Campus Life",
-      "images": ["gallery-01.jpg", "gallery-02.jpg", "gallery-03.jpg", "gallery-04.jpg", "gallery-05.jpg"]
+      "images": [
+        "uploads/739781757_2896764660667372_1517250624797454560_n.jpg",
+        "uploads/739450659_1066644095890145_3401795264665434652_n.jpg"
+      ]
     },
     {
       "title": "Academics",
-      "images": ["gallery-06.jpg", "gallery-07.jpg", "gallery-08.jpg", "gallery-09.jpg", "gallery-10.jpg"]
+      "images": [
+        "gallery-06.jpg",
+        "gallery-07.jpg",
+        "gallery-08.jpg",
+        "gallery-09.jpg",
+        "gallery-10.jpg"
+      ]
     },
     {
       "title": "Events",
-      "images": ["gallery-11.jpg", "gallery-12.jpg", "gallery-13.jpg", "gallery-14.jpg", "gallery-15.jpg"]
+      "images": [
+        "gallery-11.jpg",
+        "gallery-12.jpg",
+        "gallery-13.jpg",
+        "gallery-14.jpg",
+        "gallery-15.jpg"
+      ]
     },
     {
       "title": "Sports",
-      "images": ["gallery-16.jpg", "gallery-17.jpg", "gallery-18.jpg", "gallery-19.jpg", "gallery-20.jpg"]
+      "images": [
+        "gallery-16.jpg",
+        "gallery-17.jpg",
+        "gallery-18.jpg",
+        "gallery-19.jpg",
+        "gallery-20.jpg"
+      ]
     }
   ]
 }
