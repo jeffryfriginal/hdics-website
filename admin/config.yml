@@ -90,6 +90,19 @@ collections:
               - { label: "Description", name: "description", widget: "text" }
               - { label: "Link (e.g. Facebook post)", name: "link", widget: "string" }
 
+  - name: "hymn"
+    label: "School Hymn"
+    files:
+      - file: "data/hymn.json"
+        label: "School Hymn"
+        name: "hymn"
+        fields:
+          - { label: "Hymn Title", name: "title", widget: "string" }
+          - { label: "Composer / Lyricist (optional)", name: "composer", widget: "string", required: false }
+          - { label: "Lyrics", name: "lyrics", widget: "text", hint: "Use line breaks between lines/verses — they'll display exactly as typed." }
+          - { label: "Audio Recording (optional)", name: "audio_file", widget: "file", required: false, hint: "Upload an mp3/audio file of the hymn being sung, if you have one." }
+          - { label: "Video Link (optional)", name: "video_url", widget: "string", required: false, hint: "Paste a full YouTube link (e.g. https://www.youtube.com/watch?v=...). Leave blank if none." }
+
   - name: "hero"
     label: "Homepage Hero"
     files:
