@@ -54,7 +54,7 @@ collections:
               - label: "Images"
                 name: "images"
                 widget: "list"
-                field: { label: "Image", name: "image", widget: "image", allow_multiple: true, media_library: { config: { multiple: true } } }
+                field: { label: "Image", name: "image", widget: "image" }
 
   - name: "enroll"
     label: "Enrollment Levels"
