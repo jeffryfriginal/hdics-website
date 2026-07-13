@@ -177,8 +177,72 @@ footer { background: #080f1d; color: rgba(255,255,255,0.6); padding: 3rem 2rem; 
 /* ANIMATIONS */
 @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
 
+/* NAV TOGGLE (hamburger) */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 200;
+}
+.nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: transform 0.25s, opacity 0.25s;
+    margin: 0 auto;
+}
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
-    .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: var(--navy);
+        flex-direction: column;
+        gap: 0;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+        max-height: calc(100vh - 72px);
+        overflow-y: auto;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links li { width: 100%; }
+    .nav-links a {
+        padding: 0.9rem 1.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-links .has-dropdown > a::after { float: right; }
+    .dropdown-menu {
+        display: block;
+        position: static;
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        background: rgba(0,0,0,0.15);
+        min-width: 0;
+    }
+    .dropdown-menu a {
+        padding-left: 2.25rem;
+        color: rgba(255,255,255,0.75);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .dropdown-menu a:hover { background: rgba(255,255,255,0.05); color: var(--gold-light); }
+    .nav-cta { margin: 0.75rem 1.5rem; text-align: center; }
     .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
 }
