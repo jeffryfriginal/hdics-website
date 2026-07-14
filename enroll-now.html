@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enrollment</title>
+    <title>Enroll Now — Holy Deliverance Integrated Christian School</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -131,7 +131,7 @@
                 <li><a href="#">Admissions</a></li>
                 <li><a href="#">Programs</a></li>
                 <li><a href="#">Contact</a></li>
-                <li class="active"><a href="enroll-now.html" class="nav-cta">Enroll Now</a></li>
+                <li class="active"><a href="enroll-now.html" class="nav-cta enroll-cta">Enroll Now</a></li>
             </ul>
             <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
                 <span></span><span></span><span></span>
@@ -157,7 +157,7 @@
             <h2 class="section-title" style="text-align:center; margin-bottom:2.5rem;">Where Does Your Child Belong?</h2>
 
             <div class="enroll-grid" id="enroll-grid">
-                <p style="color:rgba(15,32,64,0.4); font-size:0.9rem;">Loading enrollment options…</p>
+                <p style="color:rgba(15,32,64,0.4); font-size:0.9rem;">Loading…</p>
             </div>
 
             <div class="enroll-note">
@@ -185,7 +185,7 @@
                 <a href="hdics-board.html">HDICS Board</a>
                 <a href="hymn.html">School Hymn</a>
                 <a href="gallery.html">Gallery</a>
-                <a href="enroll-now.html">Enroll Now</a>
+                <a href="enroll-now.html" class="enroll-cta">Enroll Now</a>
             </div>
             <div class="footer-col">
                 <h5>Contact</h5>
@@ -204,6 +204,17 @@
             .then(res => res.json())
             .then(data => {
                 const grid = document.getElementById('enroll-grid');
+
+                if (!data.enabled) {
+                    grid.innerHTML = `
+                        <div style="grid-column:1/-1; text-align:center; background:var(--white); border:1px solid var(--cream-dark); border-radius:18px; padding:3rem 2rem;">
+                            <p style="font-family:'Playfair Display', serif; font-size:1.4rem; font-weight:700; color:var(--navy); margin-bottom:0.75rem;">Enrollment is temporarily closed</p>
+                            <p style="color:var(--gray-text); font-size:0.95rem; max-width:480px; margin:0 auto;">We're not accepting new applications at the moment. Please check back soon, or reach out to us directly using the contact details below.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
                 grid.innerHTML = data.levels.map(lvl => `
                     <a href="${lvl.form_url}" target="_blank" rel="noopener noreferrer" class="enroll-card">
                         <div class="enroll-card-photo" style="background-image: url('${lvl.photo}');">
