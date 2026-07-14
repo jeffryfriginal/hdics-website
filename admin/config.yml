@@ -63,6 +63,7 @@ collections:
         label: "Enrollment Levels"
         name: "enroll"
         fields:
+          - { label: "Enrollment Open?", name: "enabled", widget: "boolean", hint: "Turn OFF to hide all Enroll Now buttons site-wide and show a closed notice on this page. Turn ON to reopen enrollment — no other changes needed." }
           - label: "Levels"
             name: "levels"
             widget: "list"
