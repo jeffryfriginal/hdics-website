@@ -19,3 +19,20 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+// Site-wide Enroll Now toggle, controlled from the CMS (Enrollment Levels → "Enrollment Open?")
+// Buttons are hidden by default (see shared.css .enroll-cta rule) — this only reveals
+// them if the CMS explicitly says enrollment is open. Safe by default, no flash.
+document.addEventListener('DOMContentLoaded', function () {
+    var ctas = document.querySelectorAll('.enroll-cta');
+    if (!ctas.length) return;
+
+    fetch('data/enroll.json?v=' + Date.now())
+        .then(res => res.json())
+        .then(data => {
+            if (data.enabled) {
+                ctas.forEach(el => el.classList.remove('enroll-cta'));
+            }
+        })
+        .catch(err => console.error('Enroll toggle check failed:', err));
+});
