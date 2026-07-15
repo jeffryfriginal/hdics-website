@@ -204,6 +204,11 @@ footer { background: #080f1d; color: rgba(255,255,255,0.6); padding: 3rem 2rem; 
 .nav-toggle.open span:nth-child(2) { opacity: 0; }
 .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+/* Enroll Now buttons are hidden by default — this is the safe starting state.
+   shared.js removes the .enroll-cta class (revealing each button's normal styling)
+   only when the CMS "Enrollment Open?" toggle is explicitly ON. */
+.enroll-cta { display: none !important; }
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .nav-toggle { display: flex; }

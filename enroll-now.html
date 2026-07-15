@@ -157,7 +157,10 @@
             <h2 class="section-title" style="text-align:center; margin-bottom:2.5rem;">Where Does Your Child Belong?</h2>
 
             <div class="enroll-grid" id="enroll-grid">
-                <p style="color:rgba(15,32,64,0.4); font-size:0.9rem;">Loading…</p>
+                <div style="grid-column:1/-1; text-align:center; background:var(--white); border:1px solid var(--cream-dark); border-radius:18px; padding:3rem 2rem;">
+                    <p style="font-family:'Playfair Display', serif; font-size:1.4rem; font-weight:700; color:var(--navy); margin-bottom:0.75rem;">Enrollment is temporarily closed</p>
+                    <p style="color:var(--gray-text); font-size:0.95rem; max-width:480px; margin:0 auto;">We're not accepting new applications at the moment. Please check back soon, or reach out to us directly using the contact details below.</p>
+                </div>
             </div>
 
             <div class="enroll-note">
@@ -200,21 +203,12 @@
     </footer>
 
     <script>
-        fetch('data/enroll.json')
+        fetch('data/enroll.json?v=' + Date.now())
             .then(res => res.json())
             .then(data => {
+                if (!data.enabled) return; // closed notice is already the default markup — nothing to do
+
                 const grid = document.getElementById('enroll-grid');
-
-                if (!data.enabled) {
-                    grid.innerHTML = `
-                        <div style="grid-column:1/-1; text-align:center; background:var(--white); border:1px solid var(--cream-dark); border-radius:18px; padding:3rem 2rem;">
-                            <p style="font-family:'Playfair Display', serif; font-size:1.4rem; font-weight:700; color:var(--navy); margin-bottom:0.75rem;">Enrollment is temporarily closed</p>
-                            <p style="color:var(--gray-text); font-size:0.95rem; max-width:480px; margin:0 auto;">We're not accepting new applications at the moment. Please check back soon, or reach out to us directly using the contact details below.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
                 grid.innerHTML = data.levels.map(lvl => `
                     <a href="${lvl.form_url}" target="_blank" rel="noopener noreferrer" class="enroll-card">
                         <div class="enroll-card-photo" style="background-image: url('${lvl.photo}');">
