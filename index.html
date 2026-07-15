@@ -180,6 +180,13 @@
         .news-card-link::after { content: '→'; transition: transform 0.2s; }
         .news-card-link:hover { color: var(--gold); }
         .news-card-link:hover::after { transform: translateX(3px); }
+        .news-card-photo {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            display: block;
+            border-top: 1px solid var(--cream-dark);
+        }
         .cta-strip { background: var(--navy); position: relative; overflow: hidden; padding: 5rem 2rem; }
         .cta-strip::before {
             content: '';
@@ -275,6 +282,22 @@
     </div>
 
     <!-- CORE VALUES PILLARS -->
+    <!-- NEWS -->
+    <section class="section news" id="news">
+        <div class="section-inner">
+            <div class="news-header">
+                <div>
+                    <p class="section-label">School News</p>
+                    <h2 class="section-title">Latest News &amp; Announcements</h2>
+                </div>
+                <a href="https://www.facebook.com/batangholy1" target="_blank" rel="noopener">See all on Facebook</a>
+            </div>
+            <div class="news-grid" id="news-grid">
+                <p style="color:rgba(15,32,64,0.35); font-size:0.9rem;">Loading news…</p>
+            </div>
+        </div>
+    </section>
+
     <section class="section pillars">
         <div class="section-inner">
             <div class="pillars-header">
@@ -307,22 +330,6 @@
                     <p class="pillar-title">Stewardship of God</p>
                     <p class="pillar-desc">We teach students to hold all things lightly — time, gifts, resources — as faithful stewards of what God has given.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- NEWS -->
-    <section class="section news" id="news">
-        <div class="section-inner">
-            <div class="news-header">
-                <div>
-                    <p class="section-label">School News</p>
-                    <h2 class="section-title">Latest News &amp; Announcements</h2>
-                </div>
-                <a href="https://www.facebook.com/batangholy1" target="_blank" rel="noopener">See all on Facebook</a>
-            </div>
-            <div class="news-grid" id="news-grid">
-                <p style="color:rgba(15,32,64,0.35); font-size:0.9rem;">Loading news…</p>
             </div>
         </div>
     </section>
@@ -377,7 +384,7 @@
     </footer>
 
     <script>
-        fetch('data/hero.json')
+        fetch('data/hero.json?v=' + Date.now())
             .then(res => res.json())
             .then(data => {
                 document.getElementById('hero-eyebrow').textContent = data.eyebrow;
@@ -387,11 +394,15 @@
             })
             .catch(err => console.error('Hero data failed to load:', err));
 
-        fetch('data/news.json')
+        fetch('data/news.json?v=' + Date.now())
             .then(res => res.json())
             .then(data => {
                 const grid = document.getElementById('news-grid');
-                grid.innerHTML = data.items.map(item => `
+                grid.innerHTML = data.items.map(item => {
+                    const photoHtml = item.image
+                        ? `<img class="news-card-photo" src="${item.image}" alt="${item.title}" loading="lazy">`
+                        : '';
+                    return `
                     <div class="news-card">
                         <div class="news-card-accent"></div>
                         <div class="news-card-body">
@@ -400,8 +411,10 @@
                             <p>${item.description}</p>
                             <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-card-link">View on Facebook</a>
                         </div>
+                        ${photoHtml}
                     </div>
-                `).join('');
+                `;
+                }).join('');
             })
             .catch(err => {
                 document.getElementById('news-grid').innerHTML = '<p style="color:rgba(15,32,64,0.35);">Unable to load news right now.</p>';
