@@ -185,7 +185,6 @@
             aspect-ratio: 16 / 10;
             object-fit: cover;
             display: block;
-            border-top: 1px solid var(--cream-dark);
         }
         .cta-strip { background: var(--navy); position: relative; overflow: hidden; padding: 5rem 2rem; }
         .cta-strip::before {
@@ -374,7 +373,7 @@
                 <h5>Contact</h5>
                 <p>Lot 2,4,6 Blk 3-4A Macopa St,<br>Aurora Subdivision, Angono, Rizal</p>
                 <a href="mailto:holy.deliverance.champions@gmail.com" style="margin-top:0.5rem;">holy.deliverance.champions@gmail.com</a>
-                <p style="margin-top:0.3rem;">8442-4359 · 0960-541-9349</p>
+                <p style="margin-top:0.3rem;">8442-4359 · 0999-578-2276</p>
                 <a href="https://www.facebook.com/batangholy1" target="_blank" rel="noopener" style="margin-top:0.75rem; color: rgba(201,146,42,0.7);">facebook.com/batangholy1</a>
             </div>
         </div>
@@ -404,6 +403,7 @@
                         : '';
                     return `
                     <div class="news-card">
+                        ${photoHtml}
                         <div class="news-card-accent"></div>
                         <div class="news-card-body">
                             <span class="news-card-tag">${item.tag}</span>
@@ -411,7 +411,6 @@
                             <p>${item.description}</p>
                             <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-card-link">View on Facebook</a>
                         </div>
-                        ${photoHtml}
                     </div>
                 `;
                 }).join('');
