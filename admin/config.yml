@@ -90,6 +90,7 @@ collections:
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Description", name: "description", widget: "text" }
               - { label: "Link (e.g. Facebook post)", name: "link", widget: "string" }
+              - { label: "Photo (optional)", name: "image", widget: "image", required: false, hint: "Save the photo from the Facebook post and upload it here — it'll show below the text on the homepage." }
 
   - name: "hymn"
     label: "School Hymn"
