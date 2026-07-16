@@ -1,0 +1,21 @@
+name: Compress images
+on:
+  pull_request:
+  push:
+    paths:
+      - 'uploads/**.{jpg,jpeg,png}'
+      - '*.{jpg,jpeg,png}'
+
+jobs:
+  build:
+    name: calibreapp/image-actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+      - name: Compress Images
+        uses: calibreapp/image-actions@main
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          jpegQuality: '80'
+          pngQuality: '80'
