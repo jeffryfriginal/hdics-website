@@ -104,40 +104,9 @@
         .enroll-note a { color: var(--gold-light); }
     </style>
 </head>
-<body>
+<body data-page="enroll-now">
 
-    <nav class="nav">
-        <div class="nav-inner">
-            <a href="index.html" class="nav-brand">
-                <img src="hdics-logo.png" alt="HDICS Logo">
-                <div class="nav-brand-text">
-                    <strong>Holy Deliverance</strong>
-                    <span>Integrated Christian School · Angono, Rizal</span>
-                </div>
-            </a>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li class="has-dropdown">
-                    <a href="about-us.html">About Us</a>
-                    <div class="dropdown-menu">
-                        <a href="about-us.html#vision">Vision Statement</a>
-                        <a href="about-us.html#mission">Mission</a>
-                        <a href="about-us.html#core-values">Core Values</a>
-                        <a href="hdics-board.html">HDICS Board</a>
-                        <a href="hymn.html">School Hymn</a>
-                    </div>
-                </li>
-                <li><a href="gallery.html">Gallery</a></li>
-                <li><a href="#">Admissions</a></li>
-                <li><a href="#">Programs</a></li>
-                <li><a href="#">Contact</a></li>
-                <li class="active"><a href="enroll-now.html" class="nav-cta enroll-cta">Enroll Now</a></li>
-            </ul>
-            <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
-        </div>
-    </nav>
+    <div id="nav-placeholder"></div>
 
     <div class="page-banner">
         <div class="page-banner-inner">
@@ -170,37 +139,7 @@
         </div>
     </section>
 
-    <footer>
-        <div class="footer-inner">
-            <div>
-                <div class="footer-brand">
-                    <img src="hdics-logo.png" alt="HDICS Logo">
-                    <div>
-                        <p class="footer-brand-name">Holy Deliverance Integrated<br>Christian School</p>
-                        <p class="footer-brand-sub">Angono, Rizal Inc.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h5>Quick Links</h5>
-                <a href="index.html">Home</a>
-                <a href="about-us.html">About Us</a>
-                <a href="hdics-board.html">HDICS Board</a>
-                <a href="hymn.html">School Hymn</a>
-                <a href="gallery.html">Gallery</a>
-                <a href="enroll-now.html" class="enroll-cta">Enroll Now</a>
-            </div>
-            <div class="footer-col">
-                <h5>Contact</h5>
-                <p>Lot 2,4,6 Blk 3-4A Macopa St,<br>Aurora Subdivision, Angono, Rizal</p>
-                <a href="mailto:holy.deliverance.champions@gmail.com">holy.deliverance.champions@gmail.com</a>
-                <p>8442-4359 · 0999-578-2276</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <span>&copy; 2025 Holy Deliverance Integrated Christian School of Angono, Rizal Inc. All rights reserved.</span>
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
     <script>
         fetch('data/enroll.json?v=' + Date.now())
