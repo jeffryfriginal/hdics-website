@@ -1,4 +1,3 @@
-```css
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -59,7 +58,7 @@ body {
 }
 .nav-brand-text span { font-size: 0.72rem; opacity: 0.7; font-weight: 300; letter-spacing: 0.02em; }
 .nav-links { display: flex; list-style: none; gap: 0; }
-.nav-links a, .dropdown-toggle {
+.nav-links a {
     color: rgba(255,255,255,0.82);
     text-decoration: none;
     font-size: 0.9rem;
@@ -68,15 +67,11 @@ body {
     border-radius: 6px;
     transition: color 0.2s, background 0.2s;
     display: block;
-    background: none;
-    border: none;
-    font-family: inherit;
-    cursor: pointer;
 }
-.nav-links a:hover, .dropdown-toggle:hover { color: var(--gold-light); background: rgba(255,255,255,0.06); }
-.nav-links .active > a, .nav-links .active > .dropdown-toggle { color: var(--gold-light); }
+.nav-links a:hover { color: var(--gold-light); background: rgba(255,255,255,0.06); }
+.nav-links .active a { color: var(--gold-light); }
 .nav-links .has-dropdown { position: relative; }
-.dropdown-toggle::after { content: ' ▾'; font-size: 0.7em; opacity: 0.7; }
+.nav-links .has-dropdown > a::after { content: ' ▾'; font-size: 0.7em; opacity: 0.7; }
 .dropdown-menu {
     display: none;
     position: absolute;
@@ -99,9 +94,7 @@ body {
 }
 .dropdown-menu a:last-child { border-bottom: none; }
 .dropdown-menu a:hover { background: var(--cream); color: var(--gold); }
-@media (min-width: 769px) {
-    .has-dropdown:hover .dropdown-menu { display: block; }
-}
+.has-dropdown:hover .dropdown-menu { display: block; }
 .nav-cta { background: var(--gold) !important; color: var(--navy) !important; font-weight: 600 !important; border-radius: 6px !important; padding: 0.45rem 1.1rem !important; }
 .nav-cta:hover { background: var(--gold-light) !important; color: var(--navy) !important; }
 
@@ -139,7 +132,7 @@ body {
 .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
 .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.9rem); font-weight: 700; line-height: 1.15; color: var(--navy); }
 
-/* PAGE BANNER */
+/* PAGE BANNER (inner pages) */
 .page-banner {
     background: var(--navy);
     padding: 4.5rem 2rem 3.5rem;
@@ -184,14 +177,36 @@ footer { background: #080f1d; color: rgba(255,255,255,0.6); padding: 3rem 2rem; 
 /* ANIMATIONS */
 @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
 
-/* NAV TOGGLE */
-.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; background: transparent; border: none; cursor: pointer; padding: 0; z-index: 200; }
-.nav-toggle span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: transform 0.25s, opacity 0.25s; margin: 0 auto; }
+/* NAV TOGGLE (hamburger) */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 200;
+}
+.nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: transform 0.25s, opacity 0.25s;
+    margin: 0 auto;
+}
 .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .nav-toggle.open span:nth-child(2) { opacity: 0; }
 .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* Enroll Now buttons hidden by default */
+/* Enroll Now buttons are hidden by default — this is the safe starting state.
+   shared.js removes the .enroll-cta class (revealing each button's normal styling)
+   only when the CMS "Enrollment Open?" toggle is explicitly ON. */
 .enroll-cta { display: none !important; }
 
 /* RESPONSIVE */
@@ -200,9 +215,12 @@ footer { background: #080f1d; color: rgba(255,255,255,0.6); padding: 3rem 2rem; 
     .nav-links {
         display: none;
         position: absolute;
-        top: 72px; left: 0; right: 0;
+        top: 72px;
+        left: 0;
+        right: 0;
         background: var(--navy);
         flex-direction: column;
+        gap: 0;
         border-top: 1px solid rgba(255,255,255,0.1);
         box-shadow: 0 16px 40px rgba(0,0,0,0.25);
         max-height: calc(100vh - 72px);
@@ -210,19 +228,26 @@ footer { background: #080f1d; color: rgba(255,255,255,0.6); padding: 3rem 2rem; 
     }
     .nav-links.open { display: flex; }
     .nav-links li { width: 100%; }
-    .nav-links a, .dropdown-toggle { padding: 0.9rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); width: 100%; text-align: left; }
+    .nav-links a {
+        padding: 0.9rem 1.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-links .has-dropdown > a::after { float: right; }
     .dropdown-menu {
-        display: none;
+        display: block;
         position: static;
         box-shadow: none;
         border: none;
         border-radius: 0;
         background: rgba(0,0,0,0.15);
+        min-width: 0;
     }
-    .has-dropdown.active .dropdown-menu { display: block; }
-    .dropdown-menu a { padding-left: 2.25rem; color: rgba(255,255,255,0.75); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .dropdown-menu a {
+        padding-left: 2.25rem;
+        color: rgba(255,255,255,0.75);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .dropdown-menu a:hover { background: rgba(255,255,255,0.05); color: var(--gold-light); }
     .nav-cta { margin: 0.75rem 1.5rem; text-align: center; }
     .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
 }
-
-```
