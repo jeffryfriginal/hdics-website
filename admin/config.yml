@@ -105,6 +105,19 @@ collections:
           - { label: "Audio Recording (optional)", name: "audio_file", widget: "file", required: false, hint: "Upload an mp3/audio file of the hymn being sung, if you have one." }
           - { label: "Video Link (optional)", name: "video_url", widget: "string", required: false, hint: "Paste a full YouTube link (e.g. https://www.youtube.com/watch?v=...). Leave blank if none." }
 
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - file: "data/settings.json"
+        label: "Contact Info (shown in footer, every page)"
+        name: "settings"
+        fields:
+          - { label: "Address", name: "address", widget: "string" }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Phone Number(s)", name: "phone", widget: "string" }
+          - { label: "Facebook URL", name: "facebook_url", widget: "string" }
+          - { label: "Facebook Display Text", name: "facebook_display", widget: "string", hint: "What shows on the page, e.g. facebook.com/yourpage" }
+
   - name: "hero"
     label: "Homepage Hero"
     files:
