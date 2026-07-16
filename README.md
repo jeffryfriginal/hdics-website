@@ -1,4 +1,4 @@
-Holy Deliverance Integrated Christian School (HDICS) Website
+# Holy Deliverance Integrated Christian School (HDICS) Website
 This is the official repository for the HDICS website, serving our students, parents, and the community in Angono, Rizal. We built this site using a static architecture to ensure it remains lightweight, fast, secure, and requires almost zero server maintenance.
 
 Technical Stack
