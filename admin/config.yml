@@ -56,6 +56,23 @@ collections:
                 widget: "list"
                 field: { label: "Image", name: "image", widget: "image" }
 
+  - name: "programs"
+    label: "Programs"
+    files:
+      - file: "data/programs.json"
+        label: "Program Levels"
+        name: "programs"
+        fields:
+          - label: "Levels"
+            name: "levels"
+            widget: "list"
+            summary: "{{name}}"
+            fields:
+              - { label: "Level Name", name: "name", widget: "string" }
+              - { label: "Grade Range", name: "grades", widget: "string" }
+              - { label: "Photo", name: "photo", widget: "image" }
+              - { label: "Description", name: "description", widget: "text" }
+
   - name: "enroll"
     label: "Enrollment Levels"
     files:
