@@ -1,0 +1,22 @@
+{
+  "levels": [
+    {
+      "name": "Elementary",
+      "grades": "Kinder – Grade 6",
+      "photo": "programs-elementary.jpg",
+      "description": "Our Elementary program builds strong foundations in literacy, numeracy, and character. Young learners grow in knowledge and in their walk with God, guided by teachers who nurture both mind and heart."
+    },
+    {
+      "name": "Junior High School",
+      "grades": "Grade 7 – Grade 10",
+      "photo": "programs-jhs.jpg",
+      "description": "Junior High School deepens academic rigor while forming students of integrity. Students explore a broader curriculum, develop critical thinking, and are equipped to live out their faith with confidence."
+    },
+    {
+      "name": "Senior High School",
+      "grades": "Grade 11 – Grade 12",
+      "photo": "programs-shs.jpg",
+      "description": "Senior High School prepares students for college and beyond, with a curriculum designed to sharpen academic excellence and leadership, all grounded in a Christ-centered worldview."
+    }
+  ]
+}
