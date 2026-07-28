@@ -233,9 +233,11 @@
         }
         .announcement-image {
             width: 100%;
-            aspect-ratio: 16 / 10;
-            object-fit: cover;
+            height: auto;
             display: block;
+            max-height: 60vh;
+            object-fit: contain;
+            background: var(--cream);
         }
         .announcement-body {
             padding: 2rem 2.5rem 2.5rem;
@@ -297,7 +299,7 @@
                 <p class="announcement-eyebrow">Announcement</p>
                 <h2 id="announcement-title" style="display:none;"></h2>
                 <p id="announcement-message" style="display:none;"></p>
-                <a href="#" id="announcement-link" class="btn-primary" style="display:none;"></a>
+                <a href="#" id="announcement-link" class="btn-primary" target="_blank" rel="noopener noreferrer" style="display:none;"></a>
             </div>
         </div>
     </div>
