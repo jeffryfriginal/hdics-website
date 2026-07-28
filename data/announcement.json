@@ -1,8 +1,8 @@
 {
-  "enabled": false,
+  "enabled": true,
   "title": "",
   "message": "",
-  "image": "",
-  "link_text": "",
-  "link_url": ""
+  "image": "uploads/1000035849.png",
+  "link_text": "Learn More",
+  "link_url": "https://www.facebook.com/share/p/1JoZoRGt4z/"
 }
