@@ -122,6 +122,20 @@ collections:
           - { label: "Audio Recording (optional)", name: "audio_file", widget: "file", required: false, hint: "Upload an mp3/audio file of the hymn being sung, if you have one." }
           - { label: "Video Link (optional)", name: "video_url", widget: "string", required: false, hint: "Paste a full YouTube link (e.g. https://www.youtube.com/watch?v=...). Leave blank if none." }
 
+  - name: "announcement"
+    label: "Homepage Popup Announcement"
+    files:
+      - file: "data/announcement.json"
+        label: "Announcement"
+        name: "announcement"
+        fields:
+          - { label: "Show this announcement?", name: "enabled", widget: "boolean", hint: "Master on/off switch. Even when ON, the popup only actually shows if you've filled in a title, message, and/or image below — an empty announcement never displays." }
+          - { label: "Title (optional)", name: "title", widget: "string", required: false }
+          - { label: "Message (optional)", name: "message", widget: "text", required: false }
+          - { label: "Image (optional)", name: "image", widget: "image", required: false }
+          - { label: "Button Text (optional)", name: "link_text", widget: "string", required: false, hint: "e.g. 'Learn More' — leave blank to hide the button." }
+          - { label: "Button Link (optional)", name: "link_url", widget: "string", required: false }
+
   - name: "settings"
     label: "Site Settings"
     files:
