@@ -47,6 +47,7 @@
             aspect-ratio: 4 / 3;
             background-size: cover;
             background-position: center;
+            cursor: zoom-in;
         }
         .carousel-arrow {
             position: absolute;
@@ -110,6 +111,48 @@
         @media (max-width: 600px) {
             .carousel-arrow { width: 36px; height: 36px; font-size: 1rem; }
         }
+
+        /* LIGHTBOX */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(8,15,29,0.94);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.5rem;
+        }
+        .lightbox.open { display: flex; }
+        .lightbox img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1.5px solid rgba(255,255,255,0.3);
+            color: var(--white);
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .lightbox-close:hover { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+        @media (max-width: 600px) {
+            .lightbox { padding: 4.5rem 1rem 1.5rem; }
+            .lightbox-close { top: 1rem; right: 1rem; width: 38px; height: 38px; font-size: 1.2rem; }
+        }
     </style>
 </head>
 <body data-page="gallery">
@@ -135,6 +178,11 @@
         </div>
     </section>
 
+
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+        <img id="lightbox-img" src="" alt="">
+    </div>
 
     <div id="footer-placeholder"></div>
 
@@ -180,7 +228,7 @@
 
             function buildCarouselBlock(carousel) {
                 const slidesHtml = carousel.images.map(img =>
-                    `<div class="carousel-slide" style="background-image:url('${img}');"></div>`
+                    `<div class="carousel-slide" style="background-image:url('${img}');" data-full-src="${img}"></div>`
                 ).join('');
 
                 return `
@@ -205,11 +253,47 @@
                     const grid = document.getElementById('gallery-grid');
                     grid.innerHTML = data.carousels.map(buildCarouselBlock).join('');
                     document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+                    setupLightbox();
                 })
                 .catch(err => {
                     document.getElementById('gallery-grid').innerHTML = '<p style="color:rgba(15,32,64,0.4);">Unable to load gallery right now.</p>';
                     console.error('Gallery data failed to load:', err);
                 });
+
+            function setupLightbox() {
+                const lightbox = document.getElementById('lightbox');
+                const lightboxImg = document.getElementById('lightbox-img');
+                const closeBtn = document.getElementById('lightbox-close');
+
+                function openLightbox(src, alt) {
+                    lightboxImg.src = src;
+                    lightboxImg.alt = alt || '';
+                    lightbox.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeLightbox() {
+                    lightbox.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+
+                document.querySelectorAll('.carousel-slide').forEach(slide => {
+                    slide.addEventListener('click', () => {
+                        openLightbox(slide.getAttribute('data-full-src'));
+                    });
+                });
+
+                closeBtn.addEventListener('click', closeLightbox);
+
+                // Click on the dark backdrop (not the image itself) closes it
+                lightbox.addEventListener('click', (e) => {
+                    if (e.target === lightbox) closeLightbox();
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+                });
+            }
         })();
     </script>
 
