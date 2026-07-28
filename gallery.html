@@ -49,38 +49,6 @@
             background-position: center;
             cursor: zoom-in;
         }
-        .carousel-counter {
-            position: absolute;
-            bottom: 0.9rem;
-            right: 0.9rem;
-            background: rgba(15,32,64,0.65);
-            color: var(--white);
-            font-size: 0.74rem;
-            font-weight: 600;
-            padding: 0.25rem 0.65rem;
-            border-radius: 100px;
-            z-index: 2;
-            letter-spacing: 0.03em;
-        }
-
-        .carousel-dots {
-            display: flex;
-            justify-content: center;
-            gap: 7px;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-        .carousel-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: var(--cream-dark);
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-            border: none;
-            padding: 0;
-        }
-        .carousel-dot.active { background: var(--gold); transform: scale(1.25); }
-        .carousel-dot:hover { background: var(--gold-light); }
 
         @media (max-width: 768px) {
             .gallery-grid { grid-template-columns: 1fr; }
@@ -145,12 +113,28 @@
         .lightbox-arrow:hover { background: var(--gold); border-color: var(--gold); color: var(--navy); }
         .lightbox-arrow.prev { left: 1.5rem; }
         .lightbox-arrow.next { right: 1.5rem; }
+        .lightbox-counter {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.1);
+            border: 1.5px solid rgba(255,255,255,0.3);
+            color: var(--white);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            z-index: 5;
+        }
         @media (max-width: 600px) {
             .lightbox { padding: 4.5rem 1rem 1.5rem; }
             .lightbox-close { top: 1rem; right: 1rem; width: 38px; height: 38px; font-size: 1.2rem; }
             .lightbox-arrow { width: 42px; height: 42px; font-size: 1.2rem; }
             .lightbox-arrow.prev { left: 0.6rem; }
             .lightbox-arrow.next { right: 0.6rem; }
+            .lightbox-counter { bottom: 0.75rem; font-size: 0.78rem; }
         }
     </style>
 </head>
@@ -183,45 +167,13 @@
         <button class="lightbox-arrow prev" id="lightbox-prev" aria-label="Previous photo">&#8249;</button>
         <img id="lightbox-img" src="" alt="">
         <button class="lightbox-arrow next" id="lightbox-next" aria-label="Next photo">&#8250;</button>
+        <div class="lightbox-counter" id="lightbox-counter"></div>
     </div>
 
     <div id="footer-placeholder"></div>
 
     <script>
         (function () {
-            function initCarousel(block) {
-                const track = block.querySelector('.carousel-track');
-                const slides = track.children;
-                const total = slides.length;
-                const counter = block.querySelector('.carousel-counter');
-                const dotsWrap = block.parentElement.querySelector('.carousel-dots');
-                let index = 0;
-
-                for (let i = 0; i < total; i++) {
-                    const dot = document.createElement('button');
-                    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-                    dot.setAttribute('aria-label', 'Go to photo ' + (i + 1));
-                    dot.addEventListener('click', () => goTo(i));
-                    dotsWrap.appendChild(dot);
-                }
-                const dots = dotsWrap.children;
-
-                function render() {
-                    track.style.transform = 'translateX(-' + (index * 100) + '%)';
-                    counter.textContent = (index + 1) + ' / ' + total;
-                    for (let i = 0; i < dots.length; i++) {
-                        dots[i].classList.toggle('active', i === index);
-                    }
-                }
-
-                function goTo(i) {
-                    index = (i + total) % total;
-                    render();
-                }
-
-                render();
-            }
-
             function buildCarouselBlock(carousel, carouselIdx) {
                 const slidesHtml = carousel.images.map((img, slideIdx) =>
                     `<div class="carousel-slide" style="background-image:url('${img}');" data-carousel-idx="${carouselIdx}" data-slide-idx="${slideIdx}"></div>`
@@ -234,9 +186,7 @@
                             <div class="carousel-track-wrap">
                                 <div class="carousel-track">${slidesHtml}</div>
                             </div>
-                            <div class="carousel-counter"></div>
                         </div>
-                        <div class="carousel-dots"></div>
                     </div>
                 `;
             }
@@ -246,7 +196,6 @@
                 .then(data => {
                     const grid = document.getElementById('gallery-grid');
                     grid.innerHTML = data.carousels.map(buildCarouselBlock).join('');
-                    document.querySelectorAll('[data-carousel]').forEach(initCarousel);
                     setupLightbox(data.carousels);
                 })
                 .catch(err => {
@@ -260,6 +209,7 @@
                 const closeBtn = document.getElementById('lightbox-close');
                 const prevBtn = document.getElementById('lightbox-prev');
                 const nextBtn = document.getElementById('lightbox-next');
+                const counterEl = document.getElementById('lightbox-counter');
 
                 let currentCarouselIdx = 0;
                 let currentSlideIdx = 0;
@@ -270,6 +220,7 @@
                     currentCarouselIdx = carouselIdx;
                     currentSlideIdx = slideIdx;
                     lightboxImg.src = images[slideIdx];
+                    counterEl.textContent = (slideIdx + 1) + ' / ' + images.length;
                 }
 
                 function openLightbox(carouselIdx, slideIdx) {
