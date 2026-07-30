@@ -51,6 +51,12 @@
             animation: fadeUp 0.6s ease both;
         }
         .hero-eyebrow::before { content: '✦'; font-size: 0.6em; }
+        /* Hero text starts invisible so the hardcoded fallback never flashes before
+           hero.json loads and (possibly different) real content replaces it. JS reveals
+           these once the fetch settles — success or failure — so there's never a moment
+           with no text at all either. See the reveal script near the hero.json fetch. */
+        .hero-text-hidden { opacity: 0; }
+        .hero-text-hidden.hero-text-ready { opacity: 1; transition: opacity 0.25s ease; }
         .hero h1 {
             font-family: 'Playfair Display', serif;
             font-size: clamp(2.8rem, 6vw, 5rem);
@@ -302,9 +308,9 @@
     <section class="hero">
         <div class="hero-bg"></div>
         <div class="hero-inner">
-            <div class="hero-eyebrow" id="hero-eyebrow">Angono, Rizal · Est. in Faith</div>
-            <h1 id="hero-heading">Nurturing <em>Minds,</em><br>Building Futures</h1>
-            <p id="hero-subheading">A Christ-centered school where academic excellence is grounded in faith, character, and the fear of the Lord.</p>
+            <div class="hero-eyebrow hero-text-hidden" id="hero-eyebrow">Angono, Rizal · Since 1998</div>
+            <h1 id="hero-heading" class="hero-text-hidden">Providing <em>Quality</em><br>Christian Education</h1>
+            <p id="hero-subheading" class="hero-text-hidden">A Christ-centered school where academic excellence is grounded in faith, character, and the fear of the Lord.</p>
             <div class="hero-actions">
                 <a href="enroll-now.html" class="btn-primary enroll-cta">Enroll Now</a>
                 <a href="#news" class="btn-outline">Latest Updates</a>
@@ -408,15 +414,32 @@
     <div id="footer-placeholder"></div>
 
     <script>
-        fetch('data/hero.json?v=' + Date.now())
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('hero-eyebrow').textContent = data.eyebrow;
-                document.getElementById('hero-heading').innerHTML =
-                    `${data.heading_start} <em>${data.heading_emphasis}</em><br>${data.heading_line2}`;
-                document.getElementById('hero-subheading').textContent = data.subheading;
-            })
-            .catch(err => console.error('Hero data failed to load:', err));
+        (function () {
+            var heroEls = ['hero-eyebrow', 'hero-heading', 'hero-subheading'].map(id => document.getElementById(id));
+            var revealed = false;
+            function revealHero() {
+                if (revealed) return;
+                revealed = true;
+                heroEls.forEach(el => el && el.classList.add('hero-text-ready'));
+            }
+            // Safety net: if the fetch hangs (slow/flaky connection), don't leave the
+            // hero invisible forever — reveal the hardcoded fallback after 2s regardless.
+            var revealTimeout = setTimeout(revealHero, 2000);
+
+            fetch('data/hero.json?v=' + Date.now())
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('hero-eyebrow').textContent = data.eyebrow;
+                    document.getElementById('hero-heading').innerHTML =
+                        `${data.heading_start} <em>${data.heading_emphasis}</em><br>${data.heading_line2}`;
+                    document.getElementById('hero-subheading').textContent = data.subheading;
+                })
+                .catch(err => console.error('Hero data failed to load:', err))
+                .finally(() => {
+                    clearTimeout(revealTimeout);
+                    revealHero();
+                });
+        })();
 
         fetch('data/news.json?v=' + Date.now())
             .then(res => res.json())
