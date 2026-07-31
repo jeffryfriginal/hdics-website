@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     navLoaded.then(setupNav);
     footerLoaded.then(setupFooterContact);
+    footerLoaded.then(setupFooterYear);
     Promise.all([navLoaded, footerLoaded]).then(setupEnrollToggle);
 });
 
@@ -55,6 +56,14 @@ function setupNav() {
             li.classList.add('active');
         }
     });
+}
+
+// Set the footer copyright year to the current year, so it never needs manual
+// updating (and never goes stale) — was previously hardcoded and had drifted.
+function setupFooterYear() {
+    var yearEl = document.getElementById('footer-year');
+    if (!yearEl) return; // footer partial didn't load, nothing to populate
+    yearEl.textContent = new Date().getFullYear();
 }
 
 // Populate footer contact info from the CMS-controlled settings file
