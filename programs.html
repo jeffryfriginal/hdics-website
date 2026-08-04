@@ -84,29 +84,33 @@
 
     <div id="footer-placeholder"></div>
 
+    <script src="shared.js"></script>
+
     <script>
         fetch('data/programs.json?v=' + Date.now())
             .then(res => res.json())
             .then(data => {
+                const dom = window.HDICS.dom;
                 const grid = document.getElementById('programs-grid');
-                grid.innerHTML = data.levels.map(lvl => `
-                    <div class="program-card">
-                        <img class="program-card-photo" src="${lvl.photo}" alt="${lvl.name}" loading="lazy">
-                        <div class="program-card-body">
-                            <span class="program-card-grade">${lvl.grades}</span>
-                            <h3>${lvl.name}</h3>
-                            <p>${lvl.description}</p>
-                        </div>
-                    </div>
-                `).join('');
+                dom.renderList(grid, data.levels, lvl => {
+                    const card = dom.el('div', { className: 'program-card' });
+                    const photo = dom.el('img', { className: 'program-card-photo', attrs: { alt: lvl.name || '', loading: 'lazy' } });
+                    const safePhoto = dom.safeLocalAsset(lvl.photo, 'program photo');
+                    if (safePhoto) photo.src = safePhoto;
+                    const body = dom.el('div', { className: 'program-card-body' });
+                    dom.appendChildren(body, [
+                        dom.el('span', { className: 'program-card-grade', text: lvl.grades }),
+                        dom.el('h3', { text: lvl.name }),
+                        dom.el('p', { text: lvl.description })
+                    ]);
+                    return dom.appendChildren(card, [photo, body]);
+                });
             })
             .catch(err => {
                 document.getElementById('programs-grid').innerHTML = '<p style="color:rgba(15,32,64,0.4);">Unable to load programs right now.</p>';
                 console.error('Programs data failed to load:', err);
             });
     </script>
-
-    <script src="shared.js"></script>
 
 </body>
 </html>
