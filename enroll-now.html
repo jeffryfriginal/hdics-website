@@ -141,32 +141,40 @@
 
     <div id="footer-placeholder"></div>
 
+    <script src="shared.js"></script>
+
     <script>
         fetch('data/enroll.json?v=' + Date.now())
             .then(res => res.json())
             .then(data => {
                 if (!data.enabled) return; // closed notice is already the default markup — nothing to do
 
+                const dom = window.HDICS.dom;
                 const grid = document.getElementById('enroll-grid');
-                grid.innerHTML = data.levels.map(lvl => `
-                    <a href="${lvl.form_url}" target="_blank" rel="noopener noreferrer" class="enroll-card">
-                        <div class="enroll-card-photo" style="background-image: url('${lvl.photo}');">
-                            <span class="enroll-card-grade">${lvl.grades}</span>
-                            <div class="enroll-card-body">
-                                <h3>${lvl.name}</h3>
-                                <span class="enroll-card-cta">Apply Now</span>
-                            </div>
-                        </div>
-                    </a>
-                `).join('');
+                dom.renderList(grid, data.levels, lvl => {
+                    const href = dom.safeExternalUrl(lvl.form_url, 'enrollment form URL') || '#';
+                    const card = dom.el('a', { className: 'enroll-card', attrs: { href: href, target: '_blank', rel: 'noopener noreferrer' } });
+                    const photo = dom.el('div', { className: 'enroll-card-photo' });
+                    const safePhoto = dom.safeLocalAsset(lvl.photo, 'enrollment photo');
+                    if (safePhoto) photo.style.backgroundImage = `url('${safePhoto}')`;
+                    const body = dom.el('div', { className: 'enroll-card-body' });
+                    dom.appendChildren(body, [
+                        dom.el('h3', { text: lvl.name }),
+                        dom.el('span', { className: 'enroll-card-cta', text: 'Apply Now' })
+                    ]);
+                    dom.appendChildren(photo, [
+                        dom.el('span', { className: 'enroll-card-grade', text: lvl.grades }),
+                        body
+                    ]);
+                    card.appendChild(photo);
+                    return card;
+                });
             })
             .catch(err => {
                 document.getElementById('enroll-grid').innerHTML = '<p style="color:rgba(15,32,64,0.4);">Unable to load enrollment options right now.</p>';
                 console.error('Enrollment data failed to load:', err);
             });
     </script>
-
-    <script src="shared.js"></script>
 
 </body>
 </html>

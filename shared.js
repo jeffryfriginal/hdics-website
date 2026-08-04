@@ -74,17 +74,24 @@ function setupFooterContact() {
     fetch('data/settings.json?v=' + Date.now())
         .then(res => res.json())
         .then(data => {
+            var dom = window.HDICS.dom;
             document.getElementById('footer-address').textContent = data.address;
 
             var emailEl = document.getElementById('footer-email');
             emailEl.textContent = data.email;
-            emailEl.href = 'mailto:' + data.email;
+            var safeEmail = dom.safeEmail(data.email, 'footer email');
+            if (safeEmail) {
+                emailEl.href = 'mailto:' + safeEmail;
+            } else {
+                emailEl.href = '#';
+            }
 
             document.getElementById('footer-phone').textContent = data.phone;
 
             var fbEl = document.getElementById('footer-facebook');
             fbEl.textContent = data.facebook_display;
-            fbEl.href = data.facebook_url;
+            var safeFacebookUrl = dom.safeExternalUrl(data.facebook_url, 'footer Facebook URL');
+            fbEl.href = safeFacebookUrl || '#';
         })
         .catch(err => console.error('Settings data failed to load:', err));
 }
@@ -105,3 +112,105 @@ function setupEnrollToggle() {
         })
         .catch(err => console.error('Enroll toggle check failed:', err));
 }
+
+// Small DOM/URL helpers for safely rendering CMS-controlled JSON without HTML strings.
+window.HDICS = window.HDICS || {};
+window.HDICS.dom = (function () {
+    function el(tag, options) {
+        options = options || {};
+        var node = document.createElement(tag);
+        if (options.className) node.className = options.className;
+        if (options.attrs) {
+            Object.keys(options.attrs).forEach(function (name) {
+                var value = options.attrs[name];
+                if (value !== undefined && value !== null) node.setAttribute(name, value);
+            });
+        }
+        if (options.text !== undefined && options.text !== null) node.textContent = options.text;
+        return node;
+    }
+
+    function appendChildren(parent, children) {
+        children.forEach(function (child) {
+            if (child) parent.appendChild(child);
+        });
+        return parent;
+    }
+
+    function renderList(container, items, renderItem) {
+        container.textContent = '';
+        var fragment = document.createDocumentFragment();
+        (Array.isArray(items) ? items : []).forEach(function (item, index) {
+            var rendered = renderItem(item, index);
+            if (rendered) fragment.appendChild(rendered);
+        });
+        container.appendChild(fragment);
+    }
+
+    function warn(message, value) {
+        console.warn('[HDICS]', message, value);
+    }
+
+    function safeExternalUrl(value, label) {
+        if (typeof value !== 'string' || !value.trim()) {
+            warn('Missing external URL for ' + label, value);
+            return null;
+        }
+        try {
+            var parsed = new URL(value, window.location.href);
+            if (parsed.protocol === 'https:') return parsed.href;
+        } catch (err) {}
+        warn('Rejected unsafe external URL for ' + label, value);
+        return null;
+    }
+
+    function safeEmail(value, label) {
+        if (typeof value !== 'string') {
+            warn('Missing email for ' + label, value);
+            return null;
+        }
+        var email = value.trim();
+        if (/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email)) return email;
+        warn('Rejected invalid email for ' + label, value);
+        return null;
+    }
+
+    function safeLocalAsset(value, label) {
+        if (typeof value !== 'string' || !value.trim()) {
+            if (value) warn('Rejected invalid asset path for ' + label, value);
+            return null;
+        }
+        var path = value.trim();
+        if (/^(javascript|vbscript):/i.test(path) || /^data:text\/html/i.test(path)) {
+            warn('Rejected unsafe asset path for ' + label, value);
+            return null;
+        }
+        try {
+            var parsed = new URL(path, window.location.href);
+            if (parsed.origin !== window.location.origin) {
+                warn('Rejected unexpected absolute asset URL for ' + label, value);
+                return null;
+            }
+            return path;
+        } catch (err) {
+            warn('Rejected invalid asset path for ' + label, value);
+            return null;
+        }
+    }
+
+    function safeYouTubeId(value, label) {
+        if (typeof value === 'string' && /^[A-Za-z0-9_-]+$/.test(value)) return value;
+        if (value) warn('Rejected invalid YouTube ID for ' + label, value);
+        return null;
+    }
+
+    return {
+        el: el,
+        appendChildren: appendChildren,
+        renderList: renderList,
+        safeExternalUrl: safeExternalUrl,
+        safeEmail: safeEmail,
+        safeLocalAsset: safeLocalAsset,
+        safeYouTubeId: safeYouTubeId
+    };
+})();
