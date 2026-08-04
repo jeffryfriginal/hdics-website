@@ -112,26 +112,33 @@
 
     <div id="footer-placeholder"></div>
 
+    <script src="shared.js"></script>
+
     <script>
         fetch('data/board.json?v=' + Date.now())
             .then(res => res.json())
             .then(data => {
+                const dom = window.HDICS.dom;
                 const grid = document.getElementById('board-grid');
-                grid.innerHTML = data.members.map(m => `
-                    <div class="board-card">
-                        <div class="board-avatar"><img src="${m.photo}" alt="${m.name}"></div>
-                        <p class="board-name">${m.name}</p>
-                        <p class="board-role">${m.role}</p>
-                    </div>
-                `).join('');
+                dom.renderList(grid, data.members, m => {
+                    const card = dom.el('div', { className: 'board-card' });
+                    const avatar = dom.el('div', { className: 'board-avatar' });
+                    const img = dom.el('img', { attrs: { alt: m.name || '' } });
+                    const safePhoto = dom.safeLocalAsset(m.photo, 'board member photo');
+                    if (safePhoto) img.src = safePhoto;
+                    avatar.appendChild(img);
+                    return dom.appendChildren(card, [
+                        avatar,
+                        dom.el('p', { className: 'board-name', text: m.name }),
+                        dom.el('p', { className: 'board-role', text: m.role })
+                    ]);
+                });
             })
             .catch(err => {
                 document.getElementById('board-grid').innerHTML = '<p style="color:rgba(15,32,64,0.4);">Unable to load board members right now.</p>';
                 console.error('Board data failed to load:', err);
             });
     </script>
-
-    <script src="shared.js"></script>
 
 </body>
 </html>

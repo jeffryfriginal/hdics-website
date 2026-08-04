@@ -413,8 +413,11 @@
     <!-- FOOTER -->
     <div id="footer-placeholder"></div>
 
+    <script src="shared.js"></script>
+
     <script>
         (function () {
+            const dom = window.HDICS.dom;
             var heroEls = ['hero-eyebrow', 'hero-heading', 'hero-subheading'].map(id => document.getElementById(id));
             var revealed = false;
             function revealHero() {
@@ -430,8 +433,14 @@
                 .then(res => res.json())
                 .then(data => {
                     document.getElementById('hero-eyebrow').textContent = data.eyebrow;
-                    document.getElementById('hero-heading').innerHTML =
-                        `${data.heading_start} <em>${data.heading_emphasis}</em><br>${data.heading_line2}`;
+                    const heading = document.getElementById('hero-heading');
+                    heading.textContent = '';
+                    heading.append(
+                        document.createTextNode(data.heading_start + ' '),
+                        dom.el('em', { text: data.heading_emphasis }),
+                        dom.el('br'),
+                        document.createTextNode(data.heading_line2 || '')
+                    );
                     document.getElementById('hero-subheading').textContent = data.subheading;
                 })
                 .catch(err => console.error('Hero data failed to load:', err))
@@ -444,24 +453,28 @@
         fetch('data/news.json?v=' + Date.now())
             .then(res => res.json())
             .then(data => {
+                const dom = window.HDICS.dom;
                 const grid = document.getElementById('news-grid');
-                grid.innerHTML = data.items.map(item => {
-                    const photoHtml = item.image
-                        ? `<img class="news-card-photo" src="${item.image}" alt="${item.title}" loading="lazy">`
-                        : '';
-                    return `
-                    <div class="news-card">
-                        ${photoHtml}
-                        <div class="news-card-accent"></div>
-                        <div class="news-card-body">
-                            <span class="news-card-tag">${item.tag}</span>
-                            <h4>${item.title}</h4>
-                            <p>${item.description}</p>
-                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-card-link">View on Facebook</a>
-                        </div>
-                    </div>
-                `;
-                }).join('');
+                dom.renderList(grid, data.items, item => {
+                    const card = dom.el('div', { className: 'news-card' });
+                    const safeImage = dom.safeLocalAsset(item.image, 'news image');
+                    if (item.image && safeImage) {
+                        card.appendChild(dom.el('img', { className: 'news-card-photo', attrs: { src: safeImage, alt: item.title || '', loading: 'lazy' } }));
+                    }
+                    card.appendChild(dom.el('div', { className: 'news-card-accent' }));
+                    const body = dom.el('div', { className: 'news-card-body' });
+                    const link = dom.el('a', { className: 'news-card-link', attrs: { target: '_blank', rel: 'noopener noreferrer' }, text: 'View on Facebook' });
+                    const safeLink = dom.safeExternalUrl(item.link, 'news link');
+                    link.href = safeLink || '#';
+                    dom.appendChildren(body, [
+                        dom.el('span', { className: 'news-card-tag', text: item.tag }),
+                        dom.el('h4', { text: item.title }),
+                        dom.el('p', { text: item.description }),
+                        link
+                    ]);
+                    card.appendChild(body);
+                    return card;
+                });
             })
             .catch(err => {
                 document.getElementById('news-grid').innerHTML = '<p style="color:rgba(15,32,64,0.35);">Unable to load news right now.</p>';
@@ -471,6 +484,7 @@
         fetch('data/announcement.json?v=' + Date.now())
             .then(res => res.json())
             .then(data => {
+                const dom = window.HDICS.dom;
                 if (!data.enabled) return;
 
                 const hasTitle = data.title && data.title.trim();
@@ -480,20 +494,30 @@
                 // Nothing to actually show — the toggle being on isn't enough by itself.
                 if (!hasTitle && !hasMessage && !hasImage) return;
 
-                // Build a signature of the current announcement's content. If a visitor already
-                // dismissed this exact announcement, don't show it again — but if the admin
-                // changes the title/message/image/link, the signature changes and it reappears for everyone.
+                const storageKey = 'hdics-announcement-dismissed';
+                let memoryDismissedSignature = window.HDICS.announcementDismissedSignature || null;
                 const signature = [data.title, data.message, data.image, data.link_text, data.link_url].join('|');
-                const dismissedSignature = localStorage.getItem('hdics-announcement-dismissed');
+                let dismissedSignature = memoryDismissedSignature;
+                try {
+                    dismissedSignature = localStorage.getItem(storageKey) || dismissedSignature;
+                } catch (err) {
+                    console.warn('[HDICS] Announcement dismissal storage unavailable; using in-memory fallback.', err);
+                }
                 if (dismissedSignature === signature) return;
 
                 const overlay = document.getElementById('announcement-overlay');
 
                 const imgEl = document.getElementById('announcement-image');
                 if (hasImage) {
-                    imgEl.src = data.image;
-                    imgEl.alt = hasTitle ? data.title : 'Announcement';
-                    imgEl.style.display = 'block';
+                    const safeImage = dom.safeLocalAsset(data.image, 'announcement image');
+                    if (safeImage) {
+                        imgEl.src = safeImage;
+                        imgEl.alt = hasTitle ? data.title : 'Announcement';
+                        imgEl.style.display = 'block';
+                    } else {
+                        imgEl.removeAttribute('src');
+                        imgEl.style.display = 'none';
+                    }
                 } else {
                     imgEl.style.display = 'none';
                 }
@@ -516,9 +540,14 @@
 
                 const linkEl = document.getElementById('announcement-link');
                 if (data.link_text && data.link_url) {
-                    linkEl.textContent = data.link_text;
-                    linkEl.href = data.link_url;
-                    linkEl.style.display = 'inline-block';
+                    const safeLink = dom.safeExternalUrl(data.link_url, 'announcement link');
+                    if (safeLink) {
+                        linkEl.textContent = data.link_text;
+                        linkEl.href = safeLink;
+                        linkEl.style.display = 'inline-block';
+                    } else {
+                        linkEl.style.display = 'none';
+                    }
                 } else {
                     linkEl.style.display = 'none';
                 }
@@ -526,7 +555,12 @@
                 function closeAnnouncement() {
                     overlay.classList.remove('open');
                     document.body.style.overflow = '';
-                    localStorage.setItem('hdics-announcement-dismissed', signature);
+                    window.HDICS.announcementDismissedSignature = signature;
+                    try {
+                        localStorage.setItem(storageKey, signature);
+                    } catch (err) {
+                        console.warn('[HDICS] Announcement dismissal could not be saved; using in-memory fallback.', err);
+                    }
                 }
 
                 document.getElementById('announcement-close').addEventListener('click', closeAnnouncement);
@@ -542,8 +576,6 @@
             })
             .catch(err => console.error('Announcement data failed to load:', err));
     </script>
-
-    <script src="shared.js"></script>
 
 </body>
 </html>

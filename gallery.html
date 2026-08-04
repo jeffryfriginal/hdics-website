@@ -172,31 +172,54 @@
 
     <div id="footer-placeholder"></div>
 
+    <script src="shared.js"></script>
+
     <script>
         (function () {
-            function buildCarouselBlock(carousel, carouselIdx) {
-                const slidesHtml = carousel.images.map((img, slideIdx) =>
-                    `<div class="carousel-slide" style="background-image:url('${img}');" data-carousel-idx="${carouselIdx}" data-slide-idx="${slideIdx}"></div>`
-                ).join('');
+            const dom = window.HDICS.dom;
 
-                return `
-                    <div class="carousel-block">
-                        <h3 class="carousel-block-title">${carousel.title}</h3>
-                        <div class="carousel" data-carousel>
-                            <div class="carousel-track-wrap">
-                                <div class="carousel-track">${slidesHtml}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+            function buildCarouselBlock(carousel, carouselIdx) {
+                const title = typeof carousel.title === 'string' && carousel.title.trim() ? carousel.title : 'Untitled Gallery';
+                if (!Array.isArray(carousel.images) || carousel.images.length === 0) {
+                    console.warn('[HDICS] Skipping gallery carousel with no images:', title);
+                    return null;
+                }
+
+                const block = dom.el('div', { className: 'carousel-block' });
+                const carouselEl = dom.el('div', { className: 'carousel', attrs: { 'data-carousel': '' } });
+                const trackWrap = dom.el('div', { className: 'carousel-track-wrap' });
+                const track = dom.el('div', { className: 'carousel-track' });
+
+                dom.renderList(track, carousel.images, (img, slideIdx) => {
+                    const safeImage = dom.safeLocalAsset(img, 'gallery image');
+                    if (!safeImage) return null;
+                    const slide = dom.el('div', { className: 'carousel-slide', attrs: { 'data-carousel-idx': carouselIdx, 'data-slide-idx': slideIdx } });
+                    slide.style.backgroundImage = `url('${safeImage}')`;
+                    return slide;
+                });
+
+                dom.appendChildren(trackWrap, [track]);
+                dom.appendChildren(carouselEl, [trackWrap]);
+                return dom.appendChildren(block, [
+                    dom.el('h3', { className: 'carousel-block-title', text: title }),
+                    carouselEl
+                ]);
             }
 
             fetch('data/gallery.json?v=' + Date.now())
                 .then(res => res.json())
                 .then(data => {
                     const grid = document.getElementById('gallery-grid');
-                    grid.innerHTML = data.carousels.map(buildCarouselBlock).join('');
-                    setupLightbox(data.carousels);
+                    const validCarousels = (Array.isArray(data.carousels) ? data.carousels : []).filter(carousel => {
+                        const title = carousel && typeof carousel.title === 'string' && carousel.title.trim() ? carousel.title : 'Untitled Gallery';
+                        if (!carousel || !Array.isArray(carousel.images) || carousel.images.length === 0) {
+                            console.warn('[HDICS] Skipping gallery carousel with no images:', title);
+                            return false;
+                        }
+                        return true;
+                    });
+                    dom.renderList(grid, validCarousels, buildCarouselBlock);
+                    setupLightbox(validCarousels);
                 })
                 .catch(err => {
                     document.getElementById('gallery-grid').innerHTML = '<p style="color:rgba(15,32,64,0.4);">Unable to load gallery right now.</p>';
@@ -215,11 +238,15 @@
                 let currentSlideIdx = 0;
 
                 function showImage(carouselIdx, slideIdx) {
-                    const images = carousels[carouselIdx].images;
+                    const carousel = carousels[carouselIdx];
+                    const images = carousel && Array.isArray(carousel.images) ? carousel.images : [];
+                    if (images.length === 0) return;
                     slideIdx = (slideIdx + images.length) % images.length;
+                    const safeImage = dom.safeLocalAsset(images[slideIdx], 'gallery lightbox image');
+                    if (!safeImage) return;
                     currentCarouselIdx = carouselIdx;
                     currentSlideIdx = slideIdx;
-                    lightboxImg.src = images[slideIdx];
+                    lightboxImg.src = safeImage;
                     counterEl.textContent = (slideIdx + 1) + ' / ' + images.length;
                 }
 
@@ -261,8 +288,6 @@
             }
         })();
     </script>
-
-    <script src="shared.js"></script>
 
 </body>
 </html>
