@@ -1,8 +1,8 @@
 {
-  "enabled": false,
-  "title": "WELCOME TO HOLY DELIVERANCE!",
-  "message": "Welcome to Holy Deliverance Integrated Christian School of Angono, Rizal Inc.",
-  "image": "uploads/hdics-logo4.png",
-  "link_text": "",
-  "link_url": ""
+  "enabled": true,
+  "title": "🌧️ Face-to-Face Classes Until 12:00 PM Today",
+  "message": "In view of the Yellow Rainfall Warning issued by PAGASA, face-to-face classes will only be held until 12:00 PM today to ensure the safety of our students, teachers, and staff.",
+  "image": "uploads/1000036198.png",
+  "link_text": "Learn More",
+  "link_url": "https://www.facebook.com/share/p/18iYyRgGrH/"
 }
