@@ -1,0 +1,95 @@
+name: Compress uploaded images
+
+# Runs automatically on every push to main that touches uploads/.
+# This is what actually fixes "compression was never working" — it doesn't
+# depend on the admin's phone/browser/file type. It runs server-side, after
+# the fact, on every image, no exceptions. HEIC/PNG/JPG all handled the same way.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'uploads/**'
+
+jobs:
+  compress:
+    runs-on: ubuntu-latest
+    # Prevents infinite loop: don't re-trigger on commits this workflow itself makes
+    if: github.event.head_commit.author.name != 'github-actions[bot]'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install sharp
+        run: npm install sharp
+
+      - name: Compress and resize images
+        run: |
+          cat > compress.js << 'SCRIPT'
+          const fs = require('fs');
+          const path = require('path');
+          const sharp = require('sharp');
+
+          const DIR = 'uploads';
+          const MAX_WIDTH = 1600;       // no on-site image needs to be wider than this
+          const JPEG_QUALITY = 78;
+          const PNG_QUALITY = 80;
+
+          async function run() {
+            const files = fs.readdirSync(DIR);
+            for (const file of files) {
+              const ext = path.extname(file).toLowerCase();
+              const full = path.join(DIR, file);
+              const stat = fs.statSync(full);
+              if (!stat.isFile()) continue;
+
+              // Skip already-small files — don't waste time re-encoding
+              if (stat.size < 150 * 1024) continue;
+
+              try {
+                if (['.jpg', '.jpeg'].includes(ext)) {
+                  const buf = await sharp(full)
+                    .resize({ width: MAX_WIDTH, withoutEnlargement: true })
+                    .jpeg({ quality: JPEG_QUALITY, mozjpeg: true })
+                    .toBuffer();
+                  if (buf.length < stat.size) fs.writeFileSync(full, buf);
+                } else if (ext === '.png') {
+                  const buf = await sharp(full)
+                    .resize({ width: MAX_WIDTH, withoutEnlargement: true })
+                    .png({ quality: PNG_QUALITY, compressionLevel: 9 })
+                    .toBuffer();
+                  if (buf.length < stat.size) fs.writeFileSync(full, buf);
+                } else if (ext === '.heic' || ext === '.heif') {
+                  // Browsers can't display HEIC at all — convert to JPEG so it
+                  // actually renders on the site instead of silently failing.
+                  const jpgPath = full.replace(/\.(heic|heif)$/i, '.jpg');
+                  const buf = await sharp(full)
+                    .resize({ width: MAX_WIDTH, withoutEnlargement: true })
+                    .jpeg({ quality: JPEG_QUALITY, mozjpeg: true })
+                    .toBuffer();
+                  fs.writeFileSync(jpgPath, buf);
+                  fs.unlinkSync(full);
+                  console.log(`Converted ${file} -> ${path.basename(jpgPath)} (update any references in data/*.json)`);
+                }
+              } catch (e) {
+                console.error(`Failed to compress ${file}:`, e.message);
+              }
+            }
+          }
+
+          run();
+          SCRIPT
+          node compress.js
+
+      - name: Commit compressed images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add uploads/
+          git diff --staged --quiet || git commit -m "Auto-compress uploaded images [skip ci]"
+          git push
