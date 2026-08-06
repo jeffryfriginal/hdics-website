@@ -11,6 +11,9 @@ on:
     paths:
       - 'uploads/**'
 
+permissions:
+  contents: write   # required so the auto-generated GITHUB_TOKEN can push the commit back — without this, GitHub gives it read-only access by default and the final push step fails with 403
+
 jobs:
   compress:
     runs-on: ubuntu-latest
