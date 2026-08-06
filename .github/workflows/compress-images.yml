@@ -43,9 +43,37 @@ jobs:
           const sharp = require('sharp');
 
           const DIR = 'uploads';
+          const DATA_DIR = 'data';
           const MAX_WIDTH = 1600;       // no on-site image needs to be wider than this
           const JPEG_QUALITY = 78;
           const PNG_QUALITY = 80;
+
+          // Tracks oldFilename -> newFilename for any HEIC->JPG renames this run,
+          // so we can sweep data/*.json afterward and fix references automatically.
+          const renames = [];
+
+          function updateJsonReferences() {
+            if (renames.length === 0) return;
+            if (!fs.existsSync(DATA_DIR)) return;
+
+            const jsonFiles = fs.readdirSync(DATA_DIR).filter(f => f.endsWith('.json'));
+
+            for (const jsonFile of jsonFiles) {
+              const full = path.join(DATA_DIR, jsonFile);
+              let text = fs.readFileSync(full, 'utf8');
+              let changed = false;
+
+              for (const { oldName, newName } of renames) {
+                if (text.includes(oldName)) {
+                  text = text.split(oldName).join(newName);
+                  changed = true;
+                  console.log(`Updated reference in ${jsonFile}: ${oldName} -> ${newName}`);
+                }
+              }
+
+              if (changed) fs.writeFileSync(full, text);
+            }
+          }
 
           function getChangedFiles() {
             const before = process.env.BEFORE_SHA;
@@ -116,12 +144,15 @@ jobs:
                     .toBuffer();
                   fs.writeFileSync(jpgPath, buf);
                   fs.unlinkSync(full);
-                  console.log(`Converted ${file} -> ${path.basename(jpgPath)} (update any references in data/*.json)`);
+                  renames.push({ oldName: file, newName: path.basename(jpgPath) });
+                  console.log(`Converted ${file} -> ${path.basename(jpgPath)}`);
                 }
               } catch (e) {
                 console.error(`Failed to compress ${file}:`, e.message);
               }
             }
+
+            updateJsonReferences();
           }
 
           run();
@@ -132,6 +163,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add uploads/
+          git add uploads/ data/
           git diff --staged --quiet || git commit -m "Auto-compress uploaded images [skip ci]"
           git push
