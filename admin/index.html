@@ -7,5 +7,168 @@
 </head>
 <body>
     <script src="https://unpkg.com/decap-cms@3.11.0/dist/decap-cms.js"></script>
+    <script>
+        // Live preview pane. Uses Decap's plain-JS extension globals (createClass, h) —
+        // no build tooling required, matches the rest of this site's approach.
+        // Each preview is a simplified visual approximation, just enough for the admin
+        // to catch an obviously wrong photo, missing text, or broken link before saving.
+
+        var PreviewStyles = h('style', {}, [
+            'body{font-family:sans-serif;color:#0f2040;} ',
+            '.pv-card{border:1px solid #f0e9db;border-radius:12px;padding:1.25rem;margin-bottom:1rem;background:#fff;} ',
+            '.pv-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#c9922a;font-weight:600;margin-bottom:0.4rem;} ',
+            '.pv-photo{width:90px;height:90px;border-radius:50%;object-fit:cover;background:#0f2040;} ',
+            '.pv-photo-wide{width:100%;max-width:320px;border-radius:8px;object-fit:cover;display:block;} ',
+            '.pv-empty{color:#b91c1c;font-style:italic;}'
+        ].join(''));
+
+        function img(src, cls) {
+            return src
+                ? h('img', { src: src, className: cls })
+                : h('p', { className: 'pv-empty' }, '⚠ No image uploaded yet');
+        }
+
+        // --- Board Members ---
+        var BoardPreview = createClass({
+            render: function () {
+                var entry = this.props.entry;
+                var members = entry.getIn(['data', 'members']) || [];
+                return h('div', {}, [
+                    PreviewStyles,
+                    h('h2', {}, 'HDICS Board — Preview'),
+                    members.map(function (m, i) {
+                        return h('div', { className: 'pv-card', key: i, style: { display: 'flex', gap: '1rem', alignItems: 'center' } }, [
+                            img(m.get('photo'), 'pv-photo'),
+                            h('div', {}, [
+                                h('strong', {}, m.get('name') || '(no name yet)'),
+                                h('div', { className: 'pv-label' }, m.get('role') || '(no role yet)')
+                            ])
+                        ]);
+                    }).toArray()
+                ]);
+            }
+        });
+
+        // --- Programs ---
+        var ProgramsPreview = createClass({
+            render: function () {
+                var entry = this.props.entry;
+                var levels = entry.getIn(['data', 'levels']) || [];
+                return h('div', {}, [
+                    PreviewStyles,
+                    h('h2', {}, 'Programs — Preview'),
+                    levels.map(function (lvl, i) {
+                        return h('div', { className: 'pv-card', key: i }, [
+                            img(lvl.get('photo'), 'pv-photo-wide'),
+                            h('div', { className: 'pv-label', style: { marginTop: '0.75rem' } }, lvl.get('grades') || '(no grade range)'),
+                            h('h3', {}, lvl.get('name') || '(no name yet)'),
+                            h('p', {}, lvl.get('description') || '(no description yet)')
+                        ]);
+                    }).toArray()
+                ]);
+            }
+        });
+
+        // --- Enrollment ---
+        var EnrollPreview = createClass({
+            render: function () {
+                var entry = this.props.entry;
+                var enabled = entry.getIn(['data', 'enabled']);
+                var levels = entry.getIn(['data', 'levels']) || [];
+                return h('div', {}, [
+                    PreviewStyles,
+                    h('h2', {}, 'Enrollment — Preview'),
+                    h('div', { className: 'pv-card', style: { background: enabled ? '#e6f4ea' : '#fdecec' } },
+                        enabled
+                            ? '✅ Enrollment is OPEN — buttons will show site-wide.'
+                            : '⛔ Enrollment is CLOSED — all Enroll Now buttons are hidden, closed notice shows instead.'
+                    ),
+                    enabled && levels.size === 0
+                        ? h('p', { className: 'pv-empty' }, '⚠ Enrollment is ON but there are no levels listed — the enrollment page will show blank. Add at least one level.')
+                        : null,
+                    levels.map(function (lvl, i) {
+                        return h('div', { className: 'pv-card', key: i }, [
+                            img(lvl.get('photo'), 'pv-photo-wide'),
+                            h('div', { className: 'pv-label', style: { marginTop: '0.75rem' } }, lvl.get('grades') || '(no grade range)'),
+                            h('h3', {}, lvl.get('name') || '(no name yet)'),
+                            h('p', {}, lvl.get('form_url') ? ('Form link: ' + lvl.get('form_url')) : h('span', { className: 'pv-empty' }, '⚠ No form URL yet'))
+                        ]);
+                    }).toArray()
+                ]);
+            }
+        });
+
+        // --- Hymn ---
+        var HymnPreview = createClass({
+            render: function () {
+                var entry = this.props.entry;
+                var data = entry.get('data');
+                return h('div', {}, [
+                    PreviewStyles,
+                    h('h2', {}, 'School Hymn — Preview'),
+                    h('div', { className: 'pv-card', style: { textAlign: 'center' } }, [
+                        h('h3', {}, data.get('title') || '(no title yet)'),
+                        data.get('composer') ? h('p', { className: 'pv-label' }, data.get('composer')) : null,
+                        h('pre', { style: { whiteSpace: 'pre-wrap', fontFamily: 'inherit', lineHeight: '1.8' } }, data.get('lyrics') || '(no lyrics yet)'),
+                        data.get('video_url') ? h('p', {}, '🎬 Video linked: ' + data.get('video_url')) : null,
+                        data.get('audio_file') ? h('p', {}, '🔊 Audio file attached') : null
+                    ])
+                ]);
+            }
+        });
+
+        // --- Announcement popup ---
+        var AnnouncementPreview = createClass({
+            render: function () {
+                var entry = this.props.entry;
+                var data = entry.get('data');
+                var enabled = data.get('enabled');
+                var hasContent = data.get('title') || data.get('message') || data.get('image');
+                return h('div', {}, [
+                    PreviewStyles,
+                    h('h2', {}, 'Popup Announcement — Preview'),
+                    h('div', { className: 'pv-card', style: { background: enabled ? '#e6f4ea' : '#f5f5f5' } },
+                        enabled ? '✅ Toggled ON' : '⛔ Toggled OFF — nothing will show regardless of content below.'
+                    ),
+                    enabled && !hasContent
+                        ? h('p', { className: 'pv-empty' }, '⚠ Toggled ON but title, message, and image are all empty — the popup will not display. This is expected/safe, not a bug.')
+                        : null,
+                    h('div', { className: 'pv-card', style: { maxWidth: '380px' } }, [
+                        img(data.get('image'), 'pv-photo-wide'),
+                        h('h3', { style: { marginTop: '0.75rem' } }, data.get('title') || ''),
+                        h('p', {}, data.get('message') || ''),
+                        data.get('link_text') ? h('p', { style: { color: '#c9922a', fontWeight: 'bold' } }, data.get('link_text') + ' →') : null
+                    ])
+                ]);
+            }
+        });
+
+        // --- Homepage News ---
+        var NewsPreview = createClass({
+            render: function () {
+                var entry = this.props.entry;
+                var items = entry.getIn(['data', 'items']) || [];
+                return h('div', {}, [
+                    PreviewStyles,
+                    h('h2', {}, 'Homepage News — Preview'),
+                    items.map(function (item, i) {
+                        return h('div', { className: 'pv-card', key: i }, [
+                            item.get('image') ? img(item.get('image'), 'pv-photo-wide') : null,
+                            h('div', { className: 'pv-label', style: { marginTop: '0.75rem' } }, item.get('tag') || '(no tag)'),
+                            h('h3', {}, item.get('title') || '(no title yet)'),
+                            h('p', {}, item.get('description') || '(no description yet)')
+                        ]);
+                    }).toArray()
+                ]);
+            }
+        });
+
+        CMS.registerPreviewTemplate('board', BoardPreview);
+        CMS.registerPreviewTemplate('programs', ProgramsPreview);
+        CMS.registerPreviewTemplate('enroll', EnrollPreview);
+        CMS.registerPreviewTemplate('hymn', HymnPreview);
+        CMS.registerPreviewTemplate('announcement', AnnouncementPreview);
+        CMS.registerPreviewTemplate('news', NewsPreview);
+    </script>
 </body>
 </html>

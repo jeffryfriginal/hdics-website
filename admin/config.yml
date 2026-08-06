@@ -34,9 +34,9 @@ collections:
             widget: "list"
             summary: "{{name}} — {{role}}"
             fields:
-              - { label: "Full Name", name: "name", widget: "string" }
-              - { label: "Role / Position", name: "role", widget: "string" }
-              - { label: "Photo", name: "photo", widget: "image" }
+              - { label: "Full Name", name: "name", widget: "string", required: true }
+              - { label: "Role / Position", name: "role", widget: "string", required: true }
+              - { label: "Photo", name: "photo", widget: "image", required: true, hint: "Square photos work best (the site crops them into a circle)." }
 
   - name: "gallery"
     label: "Gallery"
@@ -48,13 +48,16 @@ collections:
           - label: "Carousels"
             name: "carousels"
             widget: "list"
-            summary: "{{title}}"
+            summary: "{{title}} ({{fields.images}} photos)"
+            hint: "Each carousel becomes one photo slider on the Gallery page. Keep each carousel to a reasonable number of photos (10-15) — very large carousels are slow to load and hard for visitors to scroll through."
             fields:
-              - { label: "Carousel Title", name: "title", widget: "string" }
+              - { label: "Carousel Title", name: "title", widget: "string", required: true }
               - label: "Images"
                 name: "images"
                 widget: "list"
-                field: { label: "Image", name: "image", widget: "image" }
+                required: true
+                hint: "Add at least one image. Uploaded photos are automatically compressed after saving — no need to resize before uploading."
+                field: { label: "Image", name: "image", widget: "image", required: true }
 
   - name: "programs"
     label: "Programs"
@@ -68,10 +71,10 @@ collections:
             widget: "list"
             summary: "{{name}}"
             fields:
-              - { label: "Level Name", name: "name", widget: "string" }
-              - { label: "Grade Range", name: "grades", widget: "string" }
-              - { label: "Photo", name: "photo", widget: "image" }
-              - { label: "Description", name: "description", widget: "text" }
+              - { label: "Level Name", name: "name", widget: "string", required: true }
+              - { label: "Grade Range", name: "grades", widget: "string", required: true }
+              - { label: "Photo", name: "photo", widget: "image", required: true }
+              - { label: "Description", name: "description", widget: "text", required: true }
 
   - name: "enroll"
     label: "Enrollment Levels"
@@ -85,11 +88,12 @@ collections:
             name: "levels"
             widget: "list"
             summary: "{{name}}"
+            hint: "If Enrollment is turned ON above but this list is empty, the enrollment page will show blank — always keep at least one level here while enrollment is open."
             fields:
-              - { label: "Level Name", name: "name", widget: "string" }
-              - { label: "Grade Range", name: "grades", widget: "string" }
-              - { label: "Photo", name: "photo", widget: "image" }
-              - { label: "Google Form URL", name: "form_url", widget: "string" }
+              - { label: "Level Name", name: "name", widget: "string", required: true }
+              - { label: "Grade Range", name: "grades", widget: "string", required: true }
+              - { label: "Photo", name: "photo", widget: "image", required: true }
+              - { label: "Google Form URL", name: "form_url", widget: "string", required: true, pattern: ['^https:\/\/.+', "Must be a full link starting with https:// (paste the complete Google Form URL, including https://)"] }
 
   - name: "news"
     label: "Homepage News"
@@ -103,11 +107,11 @@ collections:
             widget: "list"
             summary: "{{title}}"
             fields:
-              - { label: "Tag / Category", name: "tag", widget: "string" }
-              - { label: "Title", name: "title", widget: "string" }
-              - { label: "Description", name: "description", widget: "text" }
-              - { label: "Link (e.g. Facebook post)", name: "link", widget: "string" }
-              - { label: "Photo (optional)", name: "image", widget: "image", required: false, hint: "Save the photo from the Facebook post and upload it here — it'll show below the text on the homepage." }
+              - { label: "Tag / Category", name: "tag", widget: "string", required: true }
+              - { label: "Title", name: "title", widget: "string", required: true }
+              - { label: "Description", name: "description", widget: "text", required: true }
+              - { label: "Link (e.g. Facebook post)", name: "link", widget: "string", required: true, pattern: ['^https:\/\/.+', "Must be a full link starting with https:// (paste the complete Facebook post URL)"] }
+              - { label: "Photo (optional)", name: "image", widget: "image", required: false, hint: "Save the photo from the Facebook post and upload it here — it'll show below the text on the homepage. Automatically compressed after saving." }
 
   - name: "hymn"
     label: "School Hymn"
@@ -116,11 +120,11 @@ collections:
         label: "School Hymn"
         name: "hymn"
         fields:
-          - { label: "Hymn Title", name: "title", widget: "string" }
+          - { label: "Hymn Title", name: "title", widget: "string", required: true }
           - { label: "Composer / Lyricist (optional)", name: "composer", widget: "string", required: false }
-          - { label: "Lyrics", name: "lyrics", widget: "text", hint: "Use line breaks between lines/verses — they'll display exactly as typed." }
+          - { label: "Lyrics", name: "lyrics", widget: "text", required: true, hint: "Use line breaks between lines/verses — they'll display exactly as typed." }
           - { label: "Audio Recording (optional)", name: "audio_file", widget: "file", required: false, hint: "Upload an mp3/audio file of the hymn being sung, if you have one." }
-          - { label: "Video Link (optional)", name: "video_url", widget: "string", required: false, hint: "Paste a full YouTube link (e.g. https://www.youtube.com/watch?v=...). Leave blank if none." }
+          - { label: "Video Link (optional)", name: "video_url", widget: "string", required: false, pattern: ['^$|^https:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]+', "Must be a YouTube link like https://www.youtube.com/watch?v=... or https://youtu.be/... (or leave blank)"], hint: "Paste a full YouTube link (e.g. https://www.youtube.com/watch?v=...). Leave blank if none. Other video sites won't display correctly." }
 
   - name: "announcement"
     label: "Homepage Popup Announcement"
@@ -132,9 +136,9 @@ collections:
           - { label: "Show this announcement?", name: "enabled", widget: "boolean", hint: "Master on/off switch. Even when ON, the popup only actually shows if you've filled in a title, message, and/or image below. An empty announcement never displays." }
           - { label: "Title (optional)", name: "title", widget: "string", required: false }
           - { label: "Message (optional)", name: "message", widget: "text", required: false }
-          - { label: "Image (optional)", name: "image", widget: "image", required: false }
-          - { label: "Button Text (optional)", name: "link_text", widget: "string", required: false, hint: "e.g. 'Learn More' leave blank to hide the button." }
-          - { label: "Button Link (optional)", name: "link_url", widget: "string", required: false }
+          - { label: "Image (optional)", name: "image", widget: "image", required: false, hint: "Automatically compressed after saving." }
+          - { label: "Button Text (optional)", name: "link_text", widget: "string", required: false, hint: "e.g. 'Learn More' — leave blank to hide the button." }
+          - { label: "Button Link (optional)", name: "link_url", widget: "string", required: false, pattern: ['^$|^https:\/\/.+', "Must be a full link starting with https:// (or leave blank)"] }
 
   - name: "settings"
     label: "Site Settings"
@@ -143,11 +147,11 @@ collections:
         label: "Contact Info (shown in footer, every page)"
         name: "settings"
         fields:
-          - { label: "Address", name: "address", widget: "string" }
-          - { label: "Email", name: "email", widget: "string" }
-          - { label: "Phone Number(s)", name: "phone", widget: "string" }
-          - { label: "Facebook URL", name: "facebook_url", widget: "string" }
-          - { label: "Facebook Display Text", name: "facebook_display", widget: "string", hint: "What shows on the page, e.g. facebook.com/yourpage" }
+          - { label: "Address", name: "address", widget: "string", required: true }
+          - { label: "Email", name: "email", widget: "string", required: true, pattern: ['^[^@\s]+@[^@\s]+\.[^@\s]+$', "Must be a valid email address"] }
+          - { label: "Phone Number(s)", name: "phone", widget: "string", required: true }
+          - { label: "Facebook URL", name: "facebook_url", widget: "string", required: true, pattern: ['^https:\/\/(www\.)?facebook\.com\/.+', "Must be a full facebook.com link starting with https://"] }
+          - { label: "Facebook Display Text", name: "facebook_display", widget: "string", required: true, hint: "What shows on the page, e.g. facebook.com/yourpage" }
 
   - name: "hero"
     label: "Homepage Hero"
@@ -156,8 +160,8 @@ collections:
         label: "Hero Section"
         name: "hero"
         fields:
-          - { label: "Eyebrow Text", name: "eyebrow", widget: "string" }
-          - { label: "Heading — First Word(s)", name: "heading_start", widget: "string" }
-          - { label: "Heading — Emphasized Word (gold italic)", name: "heading_emphasis", widget: "string" }
-          - { label: "Heading — Second Line", name: "heading_line2", widget: "string" }
-          - { label: "Subheading", name: "subheading", widget: "text" }
+          - { label: "Eyebrow Text", name: "eyebrow", widget: "string", required: true }
+          - { label: "Heading — First Word(s)", name: "heading_start", widget: "string", required: true }
+          - { label: "Heading — Emphasized Word (gold italic)", name: "heading_emphasis", widget: "string", required: true }
+          - { label: "Heading — Second Line", name: "heading_line2", widget: "string", required: true }
+          - { label: "Subheading", name: "subheading", widget: "text", required: true }
