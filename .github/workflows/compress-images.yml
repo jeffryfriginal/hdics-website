@@ -1,9 +1,9 @@
 name: Compress uploaded images
 
 # Runs automatically on every push to main that touches uploads/.
-# This is what actually fixes "compression was never working" — it doesn't
-# depend on the admin's phone/browser/file type. It runs server-side, after
-# the fact, on every image, no exceptions. HEIC/PNG/JPG all handled the same way.
+# Only compresses files that actually changed in this push — not the
+# whole uploads/ folder — so previously-compressed images don't get
+# re-encoded (and re-degraded) on every run.
 
 on:
   push:
@@ -31,11 +31,15 @@ jobs:
       - name: Install sharp
         run: npm install sharp
 
-      - name: Compress and resize images
+      - name: Compress and resize changed images
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
         run: |
           cat > compress.js << 'SCRIPT'
           const fs = require('fs');
           const path = require('path');
+          const { execSync } = require('child_process');
           const sharp = require('sharp');
 
           const DIR = 'uploads';
@@ -43,11 +47,46 @@ jobs:
           const JPEG_QUALITY = 78;
           const PNG_QUALITY = 80;
 
+          function getChangedFiles() {
+            const before = process.env.BEFORE_SHA;
+            const after = process.env.AFTER_SHA;
+
+            // On a brand new branch, GitHub sets `before` to all zeros —
+            // there's no prior commit to diff against, so fall back to
+            // just the files touched in the single latest commit.
+            const isNewBranch = /^0+$/.test(before || '');
+            const range = isNewBranch ? `${after} -1` : `${before} ${after}`;
+            const cmd = isNewBranch
+              ? `git diff --name-only ${after} -1 -- ${DIR}/`
+              : `git diff --name-only ${before} ${after} -- ${DIR}/`;
+
+            const out = execSync(cmd).toString();
+            return out
+              .split('\n')
+              .filter(Boolean)
+              .map(f => path.basename(f));
+          }
+
           async function run() {
-            const files = fs.readdirSync(DIR);
-            for (const file of files) {
+            const changed = getChangedFiles();
+
+            if (changed.length === 0) {
+              console.log('No changed files under uploads/ to process.');
+              return;
+            }
+
+            console.log(`Processing ${changed.length} changed file(s): ${changed.join(', ')}`);
+
+            for (const file of changed) {
               const ext = path.extname(file).toLowerCase();
               const full = path.join(DIR, file);
+
+              if (!fs.existsSync(full)) {
+                // File was deleted or renamed in this push — nothing to compress.
+                console.log(`Skipping ${file} (no longer present, likely deleted/renamed)`);
+                continue;
+              }
+
               const stat = fs.statSync(full);
               if (!stat.isFile()) continue;
 
