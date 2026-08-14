@@ -2,20 +2,26 @@
 // everything that depends on them (hamburger menu, active nav link, enroll
 // toggle, footer contact info). Edit partials/nav.html or partials/footer.html
 // once and every page picks it up — no more hand-editing six files.
+//
+// cache:'no-cache' makes the browser revalidate with the server on every
+// load instead of trusting a locally cached copy for a while. If the file
+// hasn't changed, the server just confirms that (fast, no re-download). If
+// it has, the fresh version loads right away. So edits show up immediately,
+// with no version number or workflow to maintain.
 
 document.addEventListener('DOMContentLoaded', function () {
     var navPlaceholder = document.getElementById('nav-placeholder');
     var footerPlaceholder = document.getElementById('footer-placeholder');
 
     var navLoaded = navPlaceholder
-        ? fetch('partials/nav.html?v=' + Date.now())
+        ? fetch('partials/nav.html', { cache: 'no-cache' })
             .then(res => res.text())
             .then(html => { navPlaceholder.innerHTML = html; })
             .catch(err => console.error('Nav partial failed to load:', err))
         : Promise.resolve();
 
     var footerLoaded = footerPlaceholder
-        ? fetch('partials/footer.html?v=' + Date.now())
+        ? fetch('partials/footer.html', { cache: 'no-cache' })
             .then(res => res.text())
             .then(html => { footerPlaceholder.innerHTML = html; })
             .catch(err => console.error('Footer partial failed to load:', err))
@@ -23,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     navLoaded.then(setupNav);
     footerLoaded.then(setupFooterContact);
+
     footerLoaded.then(setupFooterYear);
     Promise.all([navLoaded, footerLoaded]).then(setupEnrollToggle);
 });
