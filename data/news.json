@@ -2,6 +2,13 @@
   "items": [
     {
       "tag": "News",
+      "description": "Our student writers are taking part in the 2026 District Training Workshop, sharpening their skills in News Writing, Feature Writing, Sports Writing, Cartooning, and Photojournalism. It is a great opportunity for our young journalists to learn, practice, and grow as responsible storytellers who use their talents to inform and inspire.",
+      "title": "📰 2026 DISTRICT TRAINING WORKSHOP FOR SCHOOL PAPER ADVISERS AND PUPIL-WRITERS",
+      "link": "https://www.facebook.com/share/p/1DSR7CrcxK/",
+      "image": "uploads/1000036544.jpg"
+    },
+    {
+      "tag": "News",
       "title": "🏅 Holy Deliverance Receives the PEACMark",
       "description": "🎉 We are proud to announce that Holy Deliverance Integrated Christian School of Angono, Rizal Inc. has been successfully recertified by the Private Education Assistance Committee (PEAC) for our Junior High School, with our certification remaining valid until 2029! 🙏",
       "link": "https://www.facebook.com/share/p/19MRwuRwWs/",
@@ -27,13 +34,6 @@
       "description": "Congratulations to our Batang Holy athletes for their outstanding performances and victories in the ongoing Angono Public & Private Schools Athletic Association (APPSAA) games!",
       "link": "https://www.facebook.com/share/p/19Z4unbbrq/",
       "image": "uploads/749133166_1743629427771698_4057165495728431896_n.jpg"
-    },
-    {
-      "tag": "News",
-      "description": "Our student writers are taking part in the 2026 District Training Workshop, sharpening their skills in News Writing, Feature Writing, Sports Writing, Cartooning, and Photojournalism. It is a great opportunity for our young journalists to learn, practice, and grow as responsible storytellers who use their talents to inform and inspire.",
-      "title": "📰 2026 DISTRICT TRAINING WORKSHOP FOR SCHOOL PAPER ADVISERS AND PUPIL-WRITERS",
-      "link": "https://www.facebook.com/share/p/1DSR7CrcxK/",
-      "image": "uploads/1000036544.jpg"
     }
   ]
 }
