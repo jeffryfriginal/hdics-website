@@ -549,7 +549,7 @@
                 const signature = [data.title, data.message, data.image, data.link_text, data.link_url].join('|');
                 let dismissedSignature = memoryDismissedSignature;
                 try {
-                    dismissedSignature = localStorage.getItem(storageKey) || dismissedSignature;
+                    dismissedSignature = sessionStorage.getItem(storageKey) || dismissedSignature;
                 } catch (err) {
                     console.warn('[HDICS] Announcement dismissal storage unavailable; using in-memory fallback.', err);
                 }
@@ -607,7 +607,7 @@
                     document.body.style.overflow = '';
                     window.HDICS.announcementDismissedSignature = signature;
                     try {
-                        localStorage.setItem(storageKey, signature);
+                        sessionStorage.setItem(storageKey, signature);
                     } catch (err) {
                         console.warn('[HDICS] Announcement dismissal could not be saved; using in-memory fallback.', err);
                     }
