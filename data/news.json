@@ -2,6 +2,13 @@
   "items": [
     {
       "tag": "Events",
+      "title": "🇵🇭BUWAN NG WIKA 2026 | Pagdiriwang ng Wikang Filipino at Kulturang Pilipino! 🇵🇭",
+      "description": "🎉 Naging makulay at masaya ang ating paaralan sa pagdiriwang ng Buwan ng Wika! 📚Ipinamalas ng ating mga mag-aaral at guro ang pagmamalaki sa kulturang Pilipino sa pamamagitan ng pagsusuot ng mga tradisyonal na kasuotang Pilipino.",
+      "link": "https://www.facebook.com/share/p/1BTs77k7jj/",
+      "image": "uploads/1000037282.jpg"
+    },
+    {
+      "tag": "Events",
       "title": "A NEW MILESTONE FOR THE DELIVERER! 📰",
       "description": "It’s been a long time coming! We proudly congratulate our campus journalists who qualified for the Division Schools Press Conference 2026–2027, happening on September 5–6, 2026.",
       "link": "https://www.facebook.com/share/p/1EcMHHnYxo/",
@@ -20,13 +27,6 @@
       "title": "📰 2026 DISTRICT TRAINING WORKSHOP FOR SCHOOL PAPER ADVISERS AND PUPIL-WRITERS",
       "link": "https://www.facebook.com/share/p/1DSR7CrcxK/",
       "image": "uploads/1000036544.jpg"
-    },
-    {
-      "tag": "News",
-      "title": "🏅 Holy Deliverance Receives the PEACMark",
-      "description": "🎉 We are proud to announce that Holy Deliverance Integrated Christian School of Angono, Rizal Inc. has been successfully recertified by the Private Education Assistance Committee (PEAC) for our Junior High School, with our certification remaining valid until 2029! 🙏",
-      "link": "https://www.facebook.com/share/p/19MRwuRwWs/",
-      "image": "uploads/756219128_1335495481634366_4975963289046495740_n.png"
     }
   ]
 }
