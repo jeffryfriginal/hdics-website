@@ -26,29 +26,48 @@
             margin-bottom: 0.9rem;
         }
 
-        .carousel {
+        .carousel-card {
             position: relative;
+            display: block;
             width: 100%;
+            aspect-ratio: 4 / 3;
+            padding: 0;
+            border: none;
             border-radius: 18px;
             overflow: hidden;
             background: var(--navy);
             box-shadow: 0 14px 40px rgba(15,32,64,0.12);
+            cursor: zoom-in;
+            font: inherit;
+            text-align: left;
         }
-        .carousel-track-wrap {
-            overflow: hidden;
+        .carousel-card:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+        .carousel-cover {
+            position: absolute;
+            inset: 0;
             width: 100%;
-        }
-        .carousel-track {
-            display: flex;
+            height: 100%;
+            object-fit: cover;
+            display: block;
             transition: transform 0.4s ease;
         }
-        .carousel-slide {
-            flex: 0 0 100%;
-            aspect-ratio: 4 / 3;
-            background-size: cover;
-            background-position: center;
-            cursor: zoom-in;
+        .carousel-card:hover .carousel-cover { transform: scale(1.03); }
+        .carousel-badge {
+            position: absolute;
+            left: 1rem;
+            bottom: 1rem;
+            background: rgba(15,32,64,0.88);
+            color: var(--white);
+            border: 1px solid rgba(201,146,42,0.55);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            padding: 0.45rem 0.95rem;
+            border-radius: 100px;
+            transition: background 0.2s, color 0.2s;
         }
+        .carousel-card:hover .carousel-badge,
+        .carousel-card:focus-visible .carousel-badge { background: var(--gold); color: var(--navy); }
 
         @media (max-width: 768px) {
             .gallery-grid { grid-template-columns: 1fr; }
@@ -66,6 +85,20 @@
             padding: 3rem 1.5rem;
         }
         .lightbox.open { display: flex; }
+        .lightbox img { transition: opacity 0.2s; }
+        .lightbox.loading img { opacity: 0; }
+        .lightbox.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 40px; height: 40px;
+            margin: -20px 0 0 -20px;
+            border: 3px solid rgba(255,255,255,0.25);
+            border-top-color: var(--gold-light);
+            border-radius: 50%;
+            animation: lightbox-spin 0.8s linear infinite;
+        }
+        @keyframes lightbox-spin { to { transform: rotate(360deg); } }
         .lightbox img {
             max-width: 100%;
             max-height: 100%;
@@ -235,24 +268,33 @@
                     return null;
                 }
 
+                // Only the first usable photo is rendered on the page. The rest load in the lightbox on demand.
+                let coverIdx = -1;
+                let safeCover = null;
+                for (let i = 0; i < carousel.images.length; i++) {
+                    safeCover = dom.safeLocalAsset(carousel.images[i], 'gallery image');
+                    if (safeCover) { coverIdx = i; break; }
+                }
+                if (coverIdx === -1) return null;
+
+                const count = carousel.images.length;
+                const badgeText = count === 1 ? 'View photo' : 'View all ' + count + ' photos';
+
                 const block = dom.el('div', { className: 'carousel-block' });
-                const carouselEl = dom.el('div', { className: 'carousel', attrs: { 'data-carousel': '' } });
-                const trackWrap = dom.el('div', { className: 'carousel-track-wrap' });
-                const track = dom.el('div', { className: 'carousel-track' });
+                const card = dom.el('button', { className: 'carousel-card', attrs: {
+                    type: 'button',
+                    'aria-label': badgeText + ' in ' + title,
+                    'data-carousel-idx': carouselIdx,
+                    'data-slide-idx': coverIdx
+                } });
+                dom.appendChildren(card, [
+                    dom.el('img', { className: 'carousel-cover', attrs: { src: safeCover, alt: '', loading: 'lazy', decoding: 'async' } }),
+                    dom.el('span', { className: 'carousel-badge', text: badgeText })
+                ]);
 
-                dom.renderList(track, carousel.images, (img, slideIdx) => {
-                    const safeImage = dom.safeLocalAsset(img, 'gallery image');
-                    if (!safeImage) return null;
-                    const slide = dom.el('div', { className: 'carousel-slide', attrs: { 'data-carousel-idx': carouselIdx, 'data-slide-idx': slideIdx } });
-                    slide.style.backgroundImage = `url('${safeImage}')`;
-                    return slide;
-                });
-
-                dom.appendChildren(trackWrap, [track]);
-                dom.appendChildren(carouselEl, [trackWrap]);
                 return dom.appendChildren(block, [
                     dom.el('h3', { className: 'carousel-block-title', text: title }),
-                    carouselEl
+                    card
                 ]);
             }
 
@@ -296,8 +338,19 @@
                     if (!safeImage) return;
                     currentCarouselIdx = carouselIdx;
                     currentSlideIdx = slideIdx;
-                    lightboxImg.src = safeImage;
                     counterEl.textContent = (slideIdx + 1) + ' / ' + images.length;
+
+                    // Hide the previous photo and show a spinner until this one has loaded.
+                    lightbox.classList.add('loading');
+                    const done = () => { if (lightboxImg.getAttribute('src') === safeImage) lightbox.classList.remove('loading'); };
+                    lightboxImg.onload = done;
+                    lightboxImg.onerror = done;
+                    lightboxImg.src = safeImage;
+                    if (lightboxImg.complete && lightboxImg.naturalWidth > 0) done();
+
+                    // Warm the cache for the next photo so the arrow feels instant.
+                    const nextSafe = dom.safeLocalAsset(images[(slideIdx + 1) % images.length], 'gallery preload image');
+                    if (nextSafe) new Image().src = nextSafe;
                 }
 
                 function openLightbox(carouselIdx, slideIdx) {
@@ -311,7 +364,7 @@
                     document.body.style.overflow = '';
                 }
 
-                document.querySelectorAll('.carousel-slide').forEach(slide => {
+                document.querySelectorAll('.carousel-card').forEach(slide => {
                     slide.addEventListener('click', () => {
                         openLightbox(
                             parseInt(slide.getAttribute('data-carousel-idx'), 10),
